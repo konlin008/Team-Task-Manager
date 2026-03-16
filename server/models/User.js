@@ -17,6 +17,14 @@ const userSchema = new mongoose.Schema(
     avatar: {
       type: String,
     },
+    providers: {
+      google: {
+        id: String,
+      },
+      github: {
+        id: String,
+      },
+    },
   },
   { timestamps: true },
 );

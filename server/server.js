@@ -12,6 +12,9 @@ import "./config/passport.js";
 const app = express();
 connectDb();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(
   session({
     secret: "secret",
