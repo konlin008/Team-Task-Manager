@@ -5,6 +5,7 @@ import "dotenv/config";
 import chalk from "chalk";
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.routes.js";
+import workSpaceRouter from "./routes/workSpace.route.js";
 import passport from "passport";
 import session from "express-session";
 import "./config/passport.js";
@@ -32,6 +33,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/workSpace", workSpaceRouter);
 
 app.listen(PORT, () => {
   console.log(chalk.bgBlue(`Server listening on port ${PORT}`));
