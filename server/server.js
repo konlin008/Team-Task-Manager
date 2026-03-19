@@ -7,6 +7,7 @@ import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.routes.js";
 import workSpaceRouter from "./routes/workSpace.route.js";
 import projectRouter from "./routes/project.routes.js";
+import taskRouter from "./routes/task.routes.js";
 import passport from "passport";
 import session from "express-session";
 import "./config/passport.js";
@@ -36,6 +37,7 @@ app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/workSpace", workSpaceRouter);
 app.use("/api/project", projectRouter);
+app.use("/api/task", taskRouter);
 
 app.listen(PORT, () => {
   console.log(chalk.bgBlue(`Server listening on port ${PORT}`));
