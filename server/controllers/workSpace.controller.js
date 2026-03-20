@@ -3,17 +3,17 @@ import WorkSpace from "../models/WorkSpace.js";
 export const createWorkSpace = async (req, res) => {
   try {
     const { title, description } = req.body;
-    const ownerId = "69b78a5f70ad20838399da36";
+    const ownerId = req.user.id;
     if (!title) return res.status(400).json({ message: "Title is Required" });
-    const newWorkSpace = await WorkSpace.create({
+    const newWorkspace = await WorkSpace.create({
       title,
       description,
       createdBy: ownerId,
     });
-    if (newWorkSpace)
+    if (newWorkspace)
       return res
-        .status(200)
-        .json({ workSpace: newWorkSpace, message: "Work space Created" });
+        .status(201)
+        .json({ workspace: newWorkspace, message: "Workspace Created" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -24,7 +24,7 @@ export const createWorkSpace = async (req, res) => {
 export const addMemberToWorkSpace = async (req, res) => {
   try {
     const { userId, workSpaceId } = req.body;
-    const ownerId = "69b78a5f70ad20838399da36";
+    const ownerId = req.user.id;
     if (!userId || !workSpaceId)
       return res.status(400).json({ message: "UserId or WorkSpaceId Missing" });
     if (!userId) return req.status(404).json({ message: "User not Found" });

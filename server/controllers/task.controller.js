@@ -6,7 +6,7 @@ export const createTask = async (req, res) => {
   try {
     const { title, description, status, priority, dueDate, projectId } =
       req.body;
-    const createdBy = "69b78a5f70ad20838399da36";
+    const createdBy = req.body.id;
     if (!title || !description || !priority || !dueDate || !projectId) {
       return res.status(400).json({ message: "All Fields Are Required" });
     }
@@ -56,11 +56,20 @@ export const createTask = async (req, res) => {
 export const allTask = async (req, res) => {
   try {
     const { projectId } = req.params;
+    const { status, priority } = req.query;
     if (!projectId) return res.status(400).json({ message: "Bad Request" });
     if (!mongoose.Types.ObjectId.isValid(projectId)) {
       return res.status(400).json({ message: "Invalid project ID" });
     }
-    const tasks = await Task.find({ project: projectId });
+    const filter = { project: projectId };
+    if (status || priority) {
+      filter.$or = [
+        ...(status ? [{ status }] : []),
+        ...(priority ? [{ priority }] : []),
+      ];
+    }
+    console.log(filter);
+    const tasks = await Task.find(filter);
     return res.status(202).json({ tasks });
   } catch (error) {
     console.log(error);
@@ -72,7 +81,7 @@ export const allTask = async (req, res) => {
 export const editTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const userId = "69b78a5f70ad20838399da36";
+    const userId = req.body.id;
     const { title, description, status, priority, dueDate } = req.body;
     if (!id) return res.status(400).json({ message: "Bad Request" });
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -114,7 +123,7 @@ export const editTask = async (req, res) => {
 };
 export const deleteTask = async (req, res) => {
   try {
-    const userId = "69b78a5f70ad20838399da36";
+    const userId = req.body.id;
     const { id } = req.params;
     if (!id) return res.status(400).json({ message: "Bad Request" });
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -140,7 +149,7 @@ export const deleteTask = async (req, res) => {
 export const assignMember = async (req, res) => {
   try {
     const { memberId, id } = req.params;
-    const adminId = "69b78a5f70ad20838399da36";
+    const adminId = req.body.id;
     if (!id || !memberId)
       return res.status(400).json({ message: "Bad Request" });
     if (

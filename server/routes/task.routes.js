@@ -6,8 +6,11 @@ import {
   deleteTask,
   editTask,
 } from "../controllers/task.controller.js";
+import isAuthenticated from "../middleware/isAuthenticated.js";
 
 const router = express.Router();
+
+router.use(isAuthenticated);
 
 router.post("/", createTask);
 router.get("/:projectId", allTask);
