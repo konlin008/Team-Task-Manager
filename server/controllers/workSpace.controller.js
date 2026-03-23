@@ -1,14 +1,18 @@
+import JoinRequest from "../models/JoinRequest.js";
 import WorkSpace from "../models/WorkSpace.js";
+import crypto from "crypto";
 
 export const createWorkSpace = async (req, res) => {
   try {
     const { title, description } = req.body;
     const ownerId = req.user.id;
     if (!title) return res.status(400).json({ message: "Title is Required" });
+    const inviteCode = crypto.randomBytes(3).toString("hex");
     const newWorkspace = await WorkSpace.create({
       title,
       description,
       createdBy: ownerId,
+      inviteCode,
     });
     if (newWorkspace)
       return res
@@ -43,6 +47,79 @@ export const addMemberToWorkSpace = async (req, res) => {
     workSpace.members.push(userId);
     await workSpace.save();
     res.json({ message: "Member added", workSpace });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+export const viewAllMemberRequest = async (req, res) => {
+  try {
+    const { workSpaceId } = req.params;
+    const userId = req.user.id;
+    if (!workSpaceId)
+      return res.status(400).json({ message: "Workspace ID Missing" });
+    const workSpace = await WorkSpace.findById(workSpaceId);
+    if (!workSpace.ownerId.toString() === userId)
+      return res.status(400).json({ message: "Only owner Can view this" });
+    const memberRequests = await JoinRequest.find({ workSpace: workSpaceId });
+    return res.status(202).json({ memberRequests });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+export const reviewMemberRequest = async (req, res) => {
+  try {
+    const { requestId } = req.params;
+    const { workSpaceId, review } = req.body;
+    const userId = req.user.id;
+
+    if (!workSpaceId || !review) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const workSpace = await WorkSpace.findById(workSpaceId);
+
+    if (!workSpace) {
+      return res.status(404).json({ message: "Workspace not found" });
+    }
+
+    if (workSpace.owner.toString() !== userId) {
+      return res
+        .status(403)
+        .json({ message: "Only owner can perform this action" });
+    }
+
+    const request = await JoinRequest.findById(requestId);
+
+    if (!request) {
+      return res.status(404).json({ message: "Request not found" });
+    }
+    if (!["approve", "reject"].includes(review)) {
+      return res.status(400).json({ message: "Invalid action" });
+    }
+
+    if (review === "approve") {
+      const alreadyMember = workSpace.members.some(
+        (id) => id.toString() === request.user.toString(),
+      );
+
+      if (!alreadyMember) {
+        workSpace.members.push(request.user);
+        await workSpace.save();
+      }
+
+      request.status = "approved";
+    }
+    if (review === "reject") {
+      request.status = "rejected";
+    }
+
+    await request.save();
+
+    return res.status(200).json({
+      message: `Request ${review}ed successfully`,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal Server Error" });
