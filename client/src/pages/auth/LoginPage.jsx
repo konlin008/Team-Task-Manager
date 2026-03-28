@@ -2,8 +2,9 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { useLogin } from '@/hooks/auth.hook.js';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FcGoogle } from "react-icons/fc";
+import { toast } from 'react-toastify';
 
 
 const LoginPage = () => {
@@ -11,12 +12,15 @@ const LoginPage = () => {
   const [password, setPassword] = useState('')
   const { mutate, data, isSuccess, isLoading, error } = useLogin()
 
-  const login = async (e) => {
+  const login = (e) => {
     e.preventDefault()
     mutate({ email, password })
-    console.log(data);
-    console.log(error);
   }
+  useEffect(() => {
+    if (error) toast.error(error?.response?.data?.message)
+    if (isSuccess) toast.success(data?.message);
+  }, [error, isSuccess])
+
   return (
     <div className='w-screen h-screen flex'>
       <div className='w-[35%] h-full px-20 py-20 bg-[#F4F5FC] flex flex-col gap-10'>
@@ -60,7 +64,7 @@ const LoginPage = () => {
                   </div>
                 </div>
               </form>
-              <Button type="submit" className="w-full h-10 bg-blue-600" onClick={login}>
+              <Button type="submit" className="w-full h-10 bg-blue-600" onClick={login}  >
                 Login
               </Button>
             </CardContent>

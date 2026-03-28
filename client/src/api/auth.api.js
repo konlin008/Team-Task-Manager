@@ -1,7 +1,6 @@
-import axios from "axios";
-import instance from "./axios";
+import api from "./axios";
 
-export const loginApi = async ({ payload }) => {
-  const { data } = await instance.post("/auth/login", { payload });
-  return data;
+export const loginApi = async (payload) => {
+  const res = await api.post("/auth/login", payload);
+  return res.data;
 };
