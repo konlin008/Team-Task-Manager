@@ -72,9 +72,7 @@ export const googleAuthCallback = async (req, res) => {
         sameSite: "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       })
-      .json({
-        message: "Google login successful",
-      });
+      .redirect("http://localhost:5173/");
   } catch (error) {
     return res.status(500).json({ message: "Internal Server Error" });
   }

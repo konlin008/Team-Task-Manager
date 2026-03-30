@@ -20,7 +20,9 @@ const LoginPage = () => {
     if (error) toast.error(error?.response?.data?.message)
     if (isSuccess) toast.success(data?.message);
   }, [error, isSuccess])
-
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:8080/api/auth/google"
+  }
   return (
     <div className='w-screen h-screen flex'>
       <div className='w-[35%] h-full px-20 py-20 bg-[#F4F5FC] flex flex-col gap-10'>
@@ -69,7 +71,7 @@ const LoginPage = () => {
               </Button>
             </CardContent>
             <CardFooter className="flex-col justify-center bg-white h-full gap-2">
-              <Button variant="outline" className="w-full h-10 ">
+              <Button variant="outline" className="w-full h-10 " onClick={handleGoogleLogin}>
                 <FcGoogle className="w-10 h-10" /> Sign in with Google
               </Button>
               <p>don't have a account? <a href="register" className='text-blue-600'>Sign Up</a></p>
@@ -77,8 +79,7 @@ const LoginPage = () => {
           </Card>
         </div>
       </div>
-      <div className='w-[65%] bg-blue-500 h-full'>
-        <img src="/authPageBg.png" alt="" className='h-full object-cover' />
+      <div className='w-[65%] bg-blue-500 h-full bg-[url(/authPageBg.png)] bg-cover '>
       </div>
 
     </div>
