@@ -42,7 +42,7 @@ app.use(passport.session());
 
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
-app.use("/api/workSpace", workSpaceRouter);
+app.use("/api/workspace", workSpaceRouter);
 app.use("/api/project", projectRouter);
 app.use("/api/task", taskRouter);
 app.use("/api/comment", commentRouter);

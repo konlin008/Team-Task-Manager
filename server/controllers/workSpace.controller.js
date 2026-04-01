@@ -16,7 +16,7 @@ export const createWorkSpace = async (req, res) => {
     });
     if (newWorkspace)
       return res
-        .status(201)
+        .status(200)
         .json({ workspace: newWorkspace, message: "Workspace Created" });
   } catch (error) {
     console.log(error);

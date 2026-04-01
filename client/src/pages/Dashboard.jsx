@@ -1,10 +1,33 @@
 import { Button } from '@/components/ui/button'
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Field, FieldGroup } from '@/components/ui/field'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { useCreateWorksapce } from '@/hooks/workspace.hook'
 import { LogIn, Plus } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 
 const Dashboard = () => {
     const Workspace = false
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
+    const { mutate, isError, isSuccess, data, error } = useCreateWorksapce()
+    const createWorkspace = () => {
+        if (title.length === 0) return toast.error("Title Required")
+        mutate({ title, description });
+        setTitle("")
+        setDescription("")
+    }
+    useEffect(() => {
+        if (isError) {
+            console.log(error?.response?.data?.message || "Something Went Wrong");
+        }
+        if (isSuccess) toast.success(data?.message || 'Workspace Created Successfully');
+
+    }, [isError, isSuccess])
     return (
         <div className='w-full min-h-[calc(100vh-80px)] bg-[#F3F2FB] px-20 py-10 bg-[url(/bg.png)] bg-cover flex flex-col gap-10 '>
             <div>
@@ -51,14 +74,46 @@ const Dashboard = () => {
                                 Create or Join a new  workspace to start collaborating with your team.
                             </p>
                             <div className="flex gap-4 justify-center mt-6">
+                                <Dialog>
+                                    <form >
+                                        <DialogTrigger asChild>
+                                            <Button
+                                                className="bg-linear-to-r from-violet-500 to-purple-500 text-white px-6 py-5 rounded-xl shadow-md hover:opacity-90 transition"
+                                            >
+                                                <Plus className="mr-2 h-5 w-5" />
+                                                Create Workspace
+                                            </Button>
+                                        </DialogTrigger>
+                                        <DialogContent className="sm:max-w-sm">
+                                            <DialogHeader>
+                                                <DialogTitle>Create Workspace</DialogTitle>
+                                                <DialogDescription>
 
-                                <Button
-                                    className="bg-linear-to-r from-violet-500 to-purple-500 text-white px-6 py-5 rounded-xl shadow-md hover:opacity-90 transition"
-                                >
-                                    <Plus className="mr-2 h-5 w-5" />
-                                    Create Workspace
-                                </Button>
+                                                </DialogDescription>
+                                            </DialogHeader>
+                                            <FieldGroup>
+                                                <Field>
+                                                    <Label htmlFor="title">Workspace Title</Label>
+                                                    <Input id="title" name="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+                                                </Field>
+                                                <Field>
+                                                    <Label htmlFor="description">Description</Label>
+                                                    <Textarea id="description" placeholder="Enter workspace description" value={description} onChange={(e) => setDescription(e.target.value)} />
+                                                </Field>
+                                            </FieldGroup>
+                                            <DialogFooter className={'mt-10 border-t-0'}>
+                                                <DialogClose asChild>
+                                                    <Button variant="outline"
+                                                        className="px-6 py-5 rounded-xl border-violet-300 text-violet-600 hover:bg-violet-50">Cancel</Button>
+                                                </DialogClose>
+                                                <DialogClose asChild>
+                                                    <Button onClick={createWorkspace} className="bg-linear-to-r from-violet-500 to-purple-500 text-white px-6 py-5 rounded-xl shadow-md hover:opacity-90 transition" >Create</Button>
+                                                </DialogClose>
 
+                                            </DialogFooter>
+                                        </DialogContent>
+                                    </form>
+                                </Dialog>
                                 <Button
                                     variant="outline"
                                     className="px-6 py-5 rounded-xl border-violet-300 text-violet-600 hover:bg-violet-50"
