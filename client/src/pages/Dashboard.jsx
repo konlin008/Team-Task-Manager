@@ -5,6 +5,7 @@ import { Field, FieldGroup } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { useSearchInviteCode } from '@/hooks/user.api'
 import { useCreateWorksapce } from '@/hooks/workspace.hook'
 import { LogIn, Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
@@ -14,7 +15,11 @@ const Dashboard = () => {
     const Workspace = false
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
+    const [inviteCode, setInviteCode] = useState('')
+
     const { mutate, isError, isSuccess, data, error } = useCreateWorksapce()
+    const { data: workSpaceDetails, refetch, isFetching } = useSearchInviteCode(inviteCode)
+
     const createWorkspace = () => {
         if (title.length === 0) return toast.error("Title Required")
         mutate({ title, description });
@@ -88,7 +93,6 @@ const Dashboard = () => {
                                             <DialogHeader>
                                                 <DialogTitle>Create Workspace</DialogTitle>
                                                 <DialogDescription>
-
                                                 </DialogDescription>
                                             </DialogHeader>
                                             <FieldGroup>
@@ -114,13 +118,34 @@ const Dashboard = () => {
                                         </DialogContent>
                                     </form>
                                 </Dialog>
-                                <Button
-                                    variant="outline"
-                                    className="px-6 py-5 rounded-xl border-violet-300 text-violet-600 hover:bg-violet-50"
-                                >
-                                    <LogIn className="mr-2 h-5 w-5" />
-                                    Join Workspace
-                                </Button>
+                                <Dialog>
+                                    <form >
+                                        <DialogTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                className="px-6 py-5 rounded-xl border-violet-300 text-violet-600 hover:bg-violet-50"
+                                            >
+                                                <LogIn className="mr-2 h-5 w-5" />
+                                                Join Workspace
+                                            </Button>
+                                        </DialogTrigger>
+                                        <DialogContent className="sm:max-w-md h-90 flex flex-col gap-5">
+                                            <DialogHeader>
+                                                <DialogTitle>Join Workspace</DialogTitle>
+                                                <DialogDescription>
+                                                    Enter the invitation code you received to join an existing workspace.
+                                                </DialogDescription>
+                                            </DialogHeader>
+                                            <FieldGroup>
+                                                <Field orientation="horizontal">
+                                                    <Input type="search" placeholder="invitation code" className={'py-5'} />
+                                                    <Button onClick={createWorkspace} className="bg-linear-to-r from-violet-500 to-purple-500 text-white px-6 py-5 rounded-xl shadow-md hover:opacity-90 transition" >Search</Button>
+                                                </Field>
+                                            </FieldGroup>
+                                            <div></div>
+                                        </DialogContent>
+                                    </form>
+                                </Dialog>
 
                             </div>
                         </div>
