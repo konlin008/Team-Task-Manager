@@ -1,6 +1,10 @@
 import api from "./axios";
 
 export const serachWorkSpaceApi = async (inviteCode) => {
-  const res = api.get(`user/search-workSpace?inviteCode=${inviteCode}`);
+  const res = await api.get(`user/search-workSpace?inviteCode=${inviteCode}`);
+  return res.data;
+};
+export const requestToJoinWorkspaceApi = async (workspaceId) => {
+  const res = await api.get(`user/requestToJoin/${workspaceId}`);
   return res.data;
 };

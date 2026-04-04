@@ -3,13 +3,13 @@ import WorkSpace from "../models/WorkSpace.js";
 
 export const searchWorkspace = async (req, res) => {
   try {
-    const { invite } = req.query;
-    if (!invite)
+    const { inviteCode } = req.query;
+    if (!inviteCode)
       return res.status(400).json({
         message: "Bad Request",
       });
     const workspace = await WorkSpace.findOne({
-      inviteCode: invite,
+      inviteCode,
     }).select("title description");
     if (!workspace)
       return res.status(400).json({ message: "Workspace id Invalid" });

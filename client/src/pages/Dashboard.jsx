@@ -5,7 +5,7 @@ import { Field, FieldGroup } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { useSearchInviteCode } from '@/hooks/user.api'
+import { useRequestToJoinWorkspace, useSearchInviteCode } from '@/hooks/user.api'
 import { useCreateWorksapce } from '@/hooks/workspace.hook'
 import { LogIn, Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
@@ -17,8 +17,10 @@ const Dashboard = () => {
     const [description, setDescription] = useState('')
     const [inviteCode, setInviteCode] = useState('')
 
+
     const { mutate, isError, isSuccess, data, error } = useCreateWorksapce()
-    const { data: workSpaceDetails, refetch, isFetching } = useSearchInviteCode(inviteCode)
+    const { data: workSpaceDetails, refetch, isFetching, isSuccess: workSpaceDetailsSuccess, error: workSpaceDetailsError } = useSearchInviteCode(inviteCode)
+    const { data: requestData, refetch: refetchRequest, isFetching: requestIsFetching, isSuccess: requestIsSuccess, error: requestError } = useRequestToJoinWorkspace(workSpaceDetails?.workspace?._id)
 
     const createWorkspace = () => {
         if (title.length === 0) return toast.error("Title Required")
@@ -33,6 +35,12 @@ const Dashboard = () => {
         if (isSuccess) toast.success(data?.message || 'Workspace Created Successfully');
 
     }, [isError, isSuccess])
+    useEffect(() => {
+        if (workSpaceDetailsSuccess) { const searchedWorkspace = workSpaceDetails.Workspace }
+        if (workSpaceDetailsError) toast.error(workSpaceDetailsError?.response?.data?.message);
+    }, [workSpaceDetailsSuccess, workSpaceDetailsError])
+    useEffect(() => { }, [])
+
     return (
         <div className='w-full min-h-[calc(100vh-80px)] bg-[#F3F2FB] px-20 py-10 bg-[url(/bg.png)] bg-cover flex flex-col gap-10 '>
             <div>
@@ -138,11 +146,31 @@ const Dashboard = () => {
                                             </DialogHeader>
                                             <FieldGroup>
                                                 <Field orientation="horizontal">
-                                                    <Input type="search" placeholder="invitation code" className={'py-5'} />
-                                                    <Button onClick={createWorkspace} className="bg-linear-to-r from-violet-500 to-purple-500 text-white px-6 py-5 rounded-xl shadow-md hover:opacity-90 transition" >Search</Button>
+                                                    <Input type="search" placeholder="invitation code" className={'py-5'} value={inviteCode} onChange={(e) => setInviteCode(e.target.value)} />
+                                                    <Button onClick={refetch} className="bg-linear-to-r from-violet-500 to-purple-500 text-white px-6 py-5 rounded-xl shadow-md hover:opacity-90 transition" >Search</Button>
                                                 </Field>
                                             </FieldGroup>
-                                            <div></div>
+                                            {
+                                                workSpaceDetails?.workspace ?
+                                                    <div className="flex items-center justify-between p-4 rounded-xl border bg-gray-50 shadow-sm transition-all hover:scale-[1.01]">
+
+                                                        <div>
+                                                            <h3 className="font-semibold text-gray-800">
+                                                                {workSpaceDetails?.workspace?.title}
+                                                            </h3>
+                                                        </div>
+
+                                                        <Button
+                                                            disabled={requestIsFetching}
+                                                            onClick={refetchRequest}
+                                                            className="bg-linear-to-r from-violet-500 to-purple-500 text-white px-5 rounded-lg"
+                                                        >
+                                                            {requestIsFetching ? "Joining..." : "Join"}
+                                                        </Button>
+                                                    </div>
+                                                    : <></>
+                                            }
+
                                         </DialogContent>
                                     </form>
                                 </Dialog>
