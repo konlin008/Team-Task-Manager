@@ -24,6 +24,15 @@ export const searchWorkspace = async (req, res) => {
 export const joinWorkspaceRequest = async (req, res) => {
   try {
     const userId = req.user.id;
+    const existingWorkspace = await WorkSpace.findOne({
+      members: userId,
+    });
+
+    if (existingWorkspace) {
+      return res.status(400).json({
+        message: "You already have a pending request",
+      });
+    }
     const { workspaceId } = req.params;
     if (!workspaceId) return res.status(400).json({ message: "Bad Request" });
     const workspace = await WorkSpace.findById(workspaceId);

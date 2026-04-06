@@ -6,6 +6,9 @@ export const createWorkSpace = async (req, res) => {
   try {
     const { title, description } = req.body;
     const ownerId = req.user.id;
+    const workspace = await WorkSpace.findOne({ createdBy: ownerId });
+    if (workspace)
+      return res.status(400).json({ message: "Already owner of a workspace" });
     if (!title) return res.status(400).json({ message: "Title is Required" });
     const inviteCode = crypto.randomBytes(3).toString("hex");
     const newWorkspace = await WorkSpace.create({
@@ -20,6 +23,11 @@ export const createWorkSpace = async (req, res) => {
         .json({ workspace: newWorkspace, message: "Workspace Created" });
   } catch (error) {
     console.log(error);
+    if (error.code === 11000) {
+      return res.status(400).json({
+        message: "Invite code collision, try again",
+      });
+    }
     return res.status(500).json({
       message: "Internal Server Error",
     });
@@ -123,5 +131,20 @@ export const reviewMemberRequest = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+export const getAllWorkspace = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    let workspace = await WorkSpace.findOne({ createdBy: userId });
+    if (!workspace) {
+      workspace = await WorkSpace.findOne({ members: userId });
+    }
+    return res.status(200).json({ workspace });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
   }
 };
