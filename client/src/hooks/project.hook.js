@@ -4,19 +4,24 @@ import {
   getProjectsApi,
 } from "@/api/project.api.js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 export const useCreateProject = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createProjectApi,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["getProjects"]);
+    onSuccess: (response) => {
+      queryClient.invalidateQueries(["projects"]);
+      toast.success(response?.message);
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message);
     },
   });
 };
 export const useGetProjects = (workspaceId) => {
   return useQuery({
-    queryKey: ["getProjects", workspaceId],
+    queryKey: ["projects", workspaceId],
     queryFn: () => getProjectsApi(workspaceId),
     enabled: !!workspaceId,
   });
@@ -25,8 +30,12 @@ export const useDeleteProject = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteProjectApi,
-    onSuccess: () => {
-      queryClient.invalidateQueries(["getProjects"]);
+    onSuccess: (response) => {
+      queryClient.invalidateQueries(["projects"]);
+      toast.success(response?.message);
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message);
     },
   });
 };

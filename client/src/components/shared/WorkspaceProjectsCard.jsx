@@ -17,19 +17,10 @@ import {
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { toast } from 'react-toastify'
+import { Skeleton } from '../ui/skeleton'
 
 const WorkspaceProjectsCard = ({ allWorkspace }) => {
-    const {
-        mutate: createProject,
-        data: createProjectData,
-        isSuccess: isCreateSuccess,
-        isError: isCreateError,
-        error: createError,
-    } = useCreateProject();
-    useEffect(() => {
-        if (isCreateSuccess) toast.success(createProjectData?.message)
-        if (isCreateError) toast.error(createError?.response?.data?.message)
-    }, [isCreateSuccess, isCreateError])
+    const { mutate: createProject } = useCreateProject();
     const {
         data: projectsData,
         isSuccess: isProjectsSuccess,
@@ -37,23 +28,10 @@ const WorkspaceProjectsCard = ({ allWorkspace }) => {
         error: projectsError,
     } = useGetProjects(allWorkspace?.workspace?._id);
     useEffect(() => {
-        if (isProjectsSuccess) console.log(projectsData);
-        if (isProjectsError) console.log(projectsError?.response?.data?.message);
+        if (isProjectsError) toast.error(projectsError?.response?.data?.message);
+    }, [isProjectsError])
 
-    }, [isProjectsSuccess, isProjectsError])
-
-    const {
-        mutate: deleteProject,
-        data: deleteProjectData,
-        isSuccess: isDeleteSuccess,
-        isError: isDeleteError,
-        error: deleteError,
-    } = useDeleteProject();
-    useEffect(() => {
-        if (isDeleteSuccess) toast.success(deleteProjectData?.message)
-        if (isDeleteError) toast.error(deleteError?.response?.data?.message)
-    }, [isDeleteSuccess, isDeleteError])
-
+    const { mutate: deleteProject } = useDeleteProject();
     const progress = 80
     return (
         <Card className={'bg-white/60 backdrop-blur-md border border-white/30 rounded-2xl shadow-lg'}>
@@ -100,7 +78,7 @@ const WorkspaceProjectsCard = ({ allWorkspace }) => {
                                             Edit
                                         </Button>
 
-                                        <Button variant="outline" size="icon" className="text-red-500 border-red-200 hover:bg-red-50" onClick={() =>deleteProject(project?._id)
+                                        <Button variant="outline" size="icon" className="text-red-500 border-red-200 hover:bg-red-50" onClick={() => deleteProject(project?._id)
                                         }>
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
@@ -196,3 +174,5 @@ const AddProjectCard = ({ createProject, workspace }) => {
         </Dialog>
     )
 }
+
+
