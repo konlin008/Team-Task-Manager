@@ -11,7 +11,7 @@ const router = express.Router();
 router.use(isAuthenticated);
 
 router.post("/", createProject);
-router.get("/", getProjects);
+router.get("/workspace/:id", getProjects);
 router.delete("/:id", deleteProject);
 
 export default router;

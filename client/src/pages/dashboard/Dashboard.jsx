@@ -1,11 +1,16 @@
-import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import NewUserDashboard from './NewUserDashboard'
 import { useAllWorkspace } from '@/hooks/workspace.hook'
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
+import { Button } from '@/components/ui/button'
+import { ChevronRight, Plus, Trash2 } from 'lucide-react'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import WorkspaceProjectsCard from '@/components/shared/WorkspaceProjectsCard'
+import WorkspaceMembersCard from '@/components/shared/WorkspaceMembersCard'
 
 const Dashboard = () => {
-    const { data: allWorkspace, isSuccess: allWorkspaceIsSuccess, isError: allWorkspaceIsError, error: allWorkspaceError } = useAllWorkspace()
+    const { data: allWorkspace, isError: allWorkspaceIsError, error: allWorkspaceError } = useAllWorkspace()
     useEffect(() => {
         if (allWorkspaceIsError) toast.error(allWorkspaceError?.response?.data?.message);
     }, [allWorkspaceIsError])
@@ -22,29 +27,10 @@ const Dashboard = () => {
                     {console.log(allWorkspace?.workspace)}
                     <div className='flex gap-5'>
                         <div className='w-[60%]'>
-                            <Card className={'bg-white/60 backdrop-blur-md border border-white/30 rounded-2xl shadow-lg'}>
-                                <CardHeader>
-                                    <CardTitle className={'font-semibold text-xl'}>Your Workspaces</CardTitle>
-                                    <CardDescription>Organize tasks, collaborate with your team, and track progress efficiently.</CardDescription>
-                                    <CardAction>Card Action</CardAction>
-                                </CardHeader>
-                                <CardContent>
-                                    <p>Card Content</p>
-                                </CardContent>
-
-                            </Card>
+                            <WorkspaceProjectsCard allWorkspace={allWorkspace} />
                         </div>
                         <div className='w-[40%]'>
-                            <Card className={'bg-white/60 backdrop-blur-md border border-white/30 rounded-2xl shadow-lg'}>
-                                <CardHeader>
-                                    <CardTitle>Team</CardTitle>
-                                    <CardDescription>Manage projects, track progress, and keep your team aligned.</CardDescription>
-                                    <CardAction>Member</CardAction>
-                                </CardHeader>
-                                <CardContent>
-                                    <p>Card Content</p>
-                                </CardContent>
-                            </Card>
+                            <WorkspaceMembersCard />
                         </div>
                     </div>
                 </> :
@@ -56,3 +42,5 @@ const Dashboard = () => {
 }
 
 export default Dashboard
+
+

@@ -8,6 +8,8 @@ import { IoMdSettings } from "react-icons/io";
 const menu = [
     { name: "Dashboard", icon: IoHomeSharp, active: true },
     { name: "Task", icon: MdTaskAlt },
+    { name: "project", icon: MdTaskAlt },
+    { name: "Members", icon: RiTeamFill },
     { name: "Team", icon: RiTeamFill },
     { name: "Calendar", icon: FaCalendar },
     { name: "Setting", icon: IoMdSettings },
