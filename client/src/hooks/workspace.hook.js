@@ -1,4 +1,11 @@
-import { createWorkspaceApi, getAllWorkspaceApi } from "@/api/workspace.api.js";
+import {
+  addMemberToWorkspaceApi,
+  allMembersApi,
+  allRequestApi,
+  createWorkspaceApi,
+  getAllWorkspaceApi,
+  reviewRequestApi,
+} from "@/api/workspace.api.js";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useAllWorkspace = () => {
@@ -10,5 +17,27 @@ export const useAllWorkspace = () => {
 export const useCreateWorksapce = () => {
   return useMutation({
     mutationFn: createWorkspaceApi,
+  });
+};
+export const useAllMembers = (workspaceId) => {
+  return useQuery({
+    queryFn: () => allMembersApi(workspaceId),
+    queryKey: ["members"],
+  });
+};
+export const useAddMembers = () => {
+  return useMutation({
+    mutationFn: addMemberToWorkspaceApi,
+  });
+};
+export const useAllRequests = (workspaceId) => {
+  return useQuery({
+    queryFn: () => allRequestApi(workspaceId),
+    queryKey: ["requests"],
+  });
+};
+export const useReviewRequest = () => {
+  return useMutation({
+    mutationFn: reviewRequestApi,
   });
 };

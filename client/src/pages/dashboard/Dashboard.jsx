@@ -1,11 +1,7 @@
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import NewUserDashboard from './NewUserDashboard'
 import { useAllWorkspace } from '@/hooks/workspace.hook'
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
-import { Button } from '@/components/ui/button'
-import { ChevronRight, Plus, Trash2 } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import WorkspaceProjectsCard from '@/components/shared/WorkspaceProjectsCard'
 import WorkspaceMembersCard from '@/components/shared/WorkspaceMembersCard'
 
@@ -30,7 +26,7 @@ const Dashboard = () => {
                             <WorkspaceProjectsCard allWorkspace={allWorkspace} />
                         </div>
                         <div className='w-[40%]'>
-                            <WorkspaceMembersCard />
+                            <WorkspaceMembersCard workspaceId={allWorkspace?.workspace?._id} />
                         </div>
                     </div>
                 </> :

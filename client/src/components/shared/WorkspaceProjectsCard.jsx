@@ -17,13 +17,11 @@ import {
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { toast } from 'react-toastify'
-import { Skeleton } from '../ui/skeleton'
 
 const WorkspaceProjectsCard = ({ allWorkspace }) => {
     const { mutate: createProject } = useCreateProject();
     const {
         data: projectsData,
-        isSuccess: isProjectsSuccess,
         isError: isProjectsError,
         error: projectsError,
     } = useGetProjects(allWorkspace?.workspace?._id);
@@ -72,12 +70,6 @@ const WorkspaceProjectsCard = ({ allWorkspace }) => {
                                     </div>
 
                                     <div className="flex items-center gap-2 ml-4">
-
-                                        <Button variant="outline" size="sm" className="flex items-center gap-1">
-                                            <Pencil className="h-4 w-4" />
-                                            Edit
-                                        </Button>
-
                                         <Button variant="outline" size="icon" className="text-red-500 border-red-200 hover:bg-red-50" onClick={() => deleteProject(project?._id)
                                         }>
                                             <Trash2 className="h-4 w-4" />
