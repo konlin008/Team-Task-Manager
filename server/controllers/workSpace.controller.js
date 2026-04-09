@@ -88,14 +88,17 @@ export const addMemberToWorkSpace = async (req, res) => {
 };
 export const viewAllMemberRequest = async (req, res) => {
   try {
-    const workSpaceId = req.params.id;
+    const workspaceId = req.params.id;
     const userId = req.user.id;
-    if (!workSpaceId)
+    if (!workspaceId)
       return res.status(400).json({ message: "Workspace ID Missing" });
-    const workSpace = await WorkSpace.findById(workSpaceId);
-    if (!workSpace.ownerId.toString() === userId)
+    const workSpace = await WorkSpace.findById(workspaceId);
+    if (!workSpace.createdBy.toString() === userId)
       return res.status(400).json({ message: "Only owner Can view this" });
-    const memberRequests = await JoinRequest.find({ workSpace: workSpaceId });
+    const memberRequests = await JoinRequest.find({
+      workspace: workspaceId,
+      status: "pending",
+    }).populate("user", "name avatar email");
     return res.status(202).json({ memberRequests });
   } catch (error) {
     console.log(error);
@@ -104,21 +107,22 @@ export const viewAllMemberRequest = async (req, res) => {
 };
 export const reviewMemberRequest = async (req, res) => {
   try {
-    const { workSpaceId, requestId } = req.params;
+    const { workspaceId, requestId } = req.params;
     const { review } = req.body;
     const userId = req.user.id;
+    console.log({ workspaceId, requestId, review });
 
-    if (!workSpaceId || !review) {
+    if (!workspaceId || !review) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
-    const workSpace = await WorkSpace.findById(workSpaceId);
+    const workSpace = await WorkSpace.findById(workspaceId);
 
     if (!workSpace) {
       return res.status(404).json({ message: "Workspace not found" });
     }
 
-    if (workSpace.owner.toString() !== userId) {
+    if (workSpace.createdBy.toString() !== userId) {
       return res
         .status(403)
         .json({ message: "Only owner can perform this action" });

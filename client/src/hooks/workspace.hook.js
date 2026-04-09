@@ -34,6 +34,7 @@ export const useAllRequests = (workspaceId) => {
   return useQuery({
     queryFn: () => allRequestApi(workspaceId),
     queryKey: ["requests"],
+    retry: false,
   });
 };
 export const useReviewRequest = () => {

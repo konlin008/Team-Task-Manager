@@ -20,10 +20,9 @@ export const allRequestApi = async (workspaceId) => {
   const res = await api.get(`/workspace/${workspaceId}/all-requests`);
   return res.data;
 };
-export const reviewRequestApi = async (workspaceId, requestId, review) => {
-  const res = await api.put(
-    `/workspace/${workspaceId}/requests/${requestId}`,
+export const reviewRequestApi = async ({ workspaceId, requestId, review }) => {
+  const res = await api.put(`/workspace/${workspaceId}/requests/${requestId}`, {
     review,
-  );
+  });
   return res.data;
 };

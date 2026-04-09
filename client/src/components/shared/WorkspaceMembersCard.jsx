@@ -1,8 +1,8 @@
-import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Check, ChevronRight, Plus, Trash2, X } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useAllMembers } from '@/hooks/workspace.hook'
+import { useAllMembers, useAllRequests, useReviewRequest } from '@/hooks/workspace.hook'
 import React, { useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
@@ -58,7 +58,7 @@ const WorkspaceMembersCard = ({ workspaceId }) => {
                         })
                     }
                 </div>
-                <AddMemberCard />
+                <AddMemberCard workspaceId={workspaceId} />
             </CardContent>
         </Card>
     )
@@ -66,10 +66,20 @@ const WorkspaceMembersCard = ({ workspaceId }) => {
 
 export default WorkspaceMembersCard
 
-const AddMemberCard = () => {
-    const tags = Array.from({ length: 50 }).map(
-        (_, i, a) => `v1.2.0-beta.${a.length - i}`
-    )
+const AddMemberCard = ({ workspaceId }) => {
+    const { mutate: reviewRequest, data: requestData, isSuccess, isError, error } = useReviewRequest()
+    const { data, isLoading } = useAllRequests(workspaceId)
+    const reviewHandler = (review, requestId) => {
+        console.log("clld");
+        if (review != "approve" && review != "reject") return
+        reviewRequest({ workspaceId, requestId, review })
+    }
+    useEffect(() => {
+        if (isSuccess) toast.success(requestData?.message);
+        if (isError) toast.error(error?.response?.data?.message);
+
+    }, [isSuccess, requestData, isError, error])
+
     return (
         <>
             <Dialog>
@@ -89,33 +99,33 @@ const AddMemberCard = () => {
                     </DialogHeader>
                     <ScrollArea className="h-72 w-full rounded-md border">
                         <div className="p-4">
-                            {tags.map((tag) => {
-                                return (<React.Fragment key={tag}>
+                            {data?.memberRequests?.map((request) => {
+                                return (<React.Fragment key={request?._id}>
                                     <div className="flex items-center justify-between px-2 py-4 ">
 
                                         <div className="flex items-center gap-4">
                                             <Avatar className="h-10 w-10">
-                                                <AvatarImage src="https://randomuser.me/api/portwomen/1.jpg" />
-                                                <AvatarFallback>SJ</AvatarFallback>
+                                                <AvatarImage src={request?.user?.avatar} />
+                                                <AvatarFallback>{request?.user?.name?.slice(0, 1)}</AvatarFallback>
                                             </Avatar>
 
                                             <div>
                                                 <h3 className="text-md font-semibold text-gray-800">
-                                                    Sarah Johnson
+                                                    {request?.user?.name}
                                                 </h3>
                                                 <p className="text-sm text-gray-500">
-                                                    sarah.j@email.com
+                                                    {request?.user?.email}
                                                 </p>
                                             </div>
                                         </div>
 
                                         <div className="flex items-center gap-3">
-                                            <button className="flex items-center gap-2 px-2 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition">
+                                            <button className="flex items-center gap-1 px-2 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition" onClick={() => reviewHandler("approve", request?._id)}>
                                                 <Check size={15} />
                                                 Accept
                                             </button>
 
-                                            <button className="flex items-center gap-2 px-2 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition">
+                                            <button className="flex items-center gap-1 px-2 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition" onClick={() => reviewHandler("reject", request?._id)}>
                                                 <X size={15} />
                                                 Reject
                                             </button>
