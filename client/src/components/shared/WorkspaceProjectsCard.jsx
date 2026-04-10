@@ -17,8 +17,10 @@ import {
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 const WorkspaceProjectsCard = ({ allWorkspace }) => {
+    const nav = useNavigate()
     const { mutate: createProject } = useCreateProject();
     const {
         data: projectsData,
@@ -51,9 +53,9 @@ const WorkspaceProjectsCard = ({ allWorkspace }) => {
                     {
                         projectsData?.projects?.map((project) => {
                             return (
-                                <div className="flex items-center justify-between p-4 rounded-xl bg-white/70 backdrop-blur-md shadow-sm border" key={project?._id}>
+                                <div className="flex items-center justify-between p-4 rounded-xl bg-white/70 backdrop-blur-md shadow-sm border" key={project?._id}  >
 
-                                    <div className="flex-1">
+                                    <div className="flex-1" onClick={() => nav(`/project-details/${project?._id}`)}>
                                         <h3 className="text-sm font-medium text-gray-800 mb-2">
                                             {project?.title}
                                         </h3>

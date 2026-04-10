@@ -83,7 +83,7 @@ const AddMemberCard = ({ workspaceId }) => {
     return (
         <>
             <Dialog>
-                <DialogTrigger>
+                <DialogTrigger asChild>
                     <Button className=" w-full rounded-2xl py-6 text-base font-medium bg-linear-to-r from-violet-400 via-purple-500 to-indigo-500  text-white shadow-md hover:opacity-90 transition-all">
                         <Plus className="mr-2 h-5 w-5" />
                         Add Member

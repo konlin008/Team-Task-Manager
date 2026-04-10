@@ -4,6 +4,7 @@ import MainLayout from './layout/MainLayout'
 import LoginPage from './pages/auth/LoginPage'
 import RegisterPage from './pages/auth/RegisterPage'
 import Dashboard from './pages/dashboard/Dashboard'
+import ProjectDetails from './pages/project/ProjectDetails'
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -11,7 +12,8 @@ function App() {
       path: '/',
       element: <MainLayout />,
       children: [
-        { path: '', element: <Dashboard /> }
+        { path: '', element: <Dashboard /> },
+        { path: '/project-details/:id', element: <ProjectDetails /> }
       ]
 
     },
