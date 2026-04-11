@@ -1,4 +1,6 @@
 import React from 'react'
+import TaskProgresstab from './TaskProgresstab'
+import KanbanBoard from './kanbanBoard/KanbanBoard'
 
 
 const ProjectDetails = () => {
@@ -9,6 +11,7 @@ const ProjectDetails = () => {
                 <p className='text-md text-gray-600'>project description</p>
             </div>
             <TaskProgresstab />
+            <KanbanBoard />
         </div>
 
     )
