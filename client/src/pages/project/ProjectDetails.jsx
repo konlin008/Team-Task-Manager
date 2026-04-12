@@ -1,6 +1,6 @@
 import React from 'react'
 import TaskProgresstab from './TaskProgresstab'
-import KanbanBoard from './kanbanBoard/KanbanBoard'
+import KanbanBoard from '../../components/kanbanBoard/KanbanBoard'
 
 
 const ProjectDetails = () => {
