@@ -161,7 +161,6 @@ const AddProjectCard = ({ createProject, workspace }) => {
                                 Create Project
                             </Button>
                         </DialogClose>
-
                     </DialogFooter>
                 </form>
             </DialogContent>
