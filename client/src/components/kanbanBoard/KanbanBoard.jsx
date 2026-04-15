@@ -1,32 +1,66 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DndContext, closestCorners, DragOverlay } from "@dnd-kit/core";
 import Column from "./Column";
 import TaskCard from "./TaskCard";
 
-export default function KanbanBoard() {
+const STATUS_MAP = {
+    "todo": "todo",
+    "in progress": "inProgress",
+    "inprogress": "inProgress",
+    "in-progress": "inProgress",
+    "done": "done",
+};
+
+function normalizeTask(t) {
+    const rawStatus = (t.status ?? "").toLowerCase().replace(/\s+/g, "");
+
+    const statusKey =
+        STATUS_MAP[rawStatus] ??
+        STATUS_MAP[(t.status ?? "").toLowerCase()] ??
+        "todo";
+
+    const assignee =
+        Array.isArray(t.assignedTo) && t.assignedTo.length > 0
+            ? t.assignedTo[0]?.name ?? ""
+            : "";
+
+    const date = t.dueDate
+        ? new Date(t.dueDate).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+        })
+        : "";
+
+    return {
+        ...t,
+        id: t._id,          
+        status: statusKey, 
+        priority: (t.priority ?? "low").toLowerCase(),
+        assignee,
+        date,
+    };
+}
+
+export default function KanbanBoard({ tasks, projectId }) {
     const [columns, setColumns] = useState({
-        todo: [
-            { id: "1", title: "Design login page UI", priority: "high", assignee: "Aman", date: "Apr 25" },
-            { id: "2", title: "Setup project structure", priority: "medium", assignee: "Riya", date: "Apr 28" },
-            { id: "3", title: "Create reusable button component", priority: "low", assignee: "Karan", date: "May 1" },
-            { id: "4", title: "Write API service functions", priority: "medium", assignee: "Aman", date: "May 2" },
-            { id: "5", title: "Research drag-and-drop libraries", priority: "low", assignee: "Riya", date: "May 3" },
-            { id: "6", title: "Fix mobile responsiveness issues", priority: "high", assignee: "Karan", date: "May 5" },
-        ],
-        inProgress: [
-            { id: "7", title: "Implement Kanban drag logic", priority: "high", assignee: "Aman", date: "Apr 30" },
-            { id: "8", title: "Connect frontend with backend API", priority: "medium", assignee: "Riya", date: "May 4" },
-            { id: "9", title: "Add authentication flow", priority: "high", assignee: "Karan", date: "May 6" },
-            { id: "10", title: "Optimize component re-renders", priority: "low", assignee: "Aman", date: "May 7" },
-        ],
-        done: [
-            { id: "11", title: "Initialize React project", priority: "low", assignee: "Riya", date: "Apr 20" },
-            { id: "12", title: "Install Tailwind CSS", priority: "low", assignee: "Karan", date: "Apr 21" },
-            { id: "13", title: "Setup routing", priority: "medium", assignee: "Aman", date: "Apr 23" },
-        ],
+        todo: [],
+        inProgress: [],
+        done: [],
     });
 
     const [activeTask, setActiveTask] = useState(null);
+
+    useEffect(() => {
+        if (!tasks) return;
+
+        const normalized = tasks.map(normalizeTask);
+
+        setColumns({
+            todo: normalized.filter((t) => t.status === "todo"),
+            inProgress: normalized.filter((t) => t.status === "inProgress"),
+            done: normalized.filter((t) => t.status === "done"),
+        });
+    }, [tasks]);
 
     function findColumn(id) {
         return Object.keys(columns).find((colId) =>
@@ -34,33 +68,28 @@ export default function KanbanBoard() {
         );
     }
 
-    function handleDragStart(event) {
-        const { active } = event;
+    function handleDragStart({ active }) {
         const col = findColumn(active.id);
         const task = columns[col]?.find((t) => t.id === active.id);
         setActiveTask(task ?? null);
     }
 
-    function handleDragEnd(event) {
-        const { active, over } = event;
+    function handleDragEnd({ active, over }) {
         setActiveTask(null);
-
         if (!over) return;
 
         const sourceCol = findColumn(active.id);
-        const destCol = findColumn(over.id) || over.id;
+        const destCol = findColumn(over.id) ?? over.id;
 
         if (!sourceCol || !destCol || sourceCol === destCol) return;
 
-        const sourceItems = [...columns[sourceCol]];
-        const destItems = [...columns[destCol]];
-        const movedTask = sourceItems.find((i) => i.id === active.id);
+        const movedTask = columns[sourceCol].find((i) => i.id === active.id);
 
-        setColumns({
-            ...columns,
-            [sourceCol]: sourceItems.filter((i) => i.id !== active.id),
-            [destCol]: [...destItems, movedTask],
-        });
+        setColumns((prev) => ({
+            ...prev,
+            [sourceCol]: prev[sourceCol].filter((i) => i.id !== active.id),
+            [destCol]: [...prev[destCol], { ...movedTask, status: destCol }],
+        }));
     }
 
     return (
@@ -70,8 +99,8 @@ export default function KanbanBoard() {
             onDragEnd={handleDragEnd}
         >
             <div className="flex gap-6 justify-between">
-                {Object.entries(columns).map(([colId, tasks]) => (
-                    <Column key={colId} id={colId} tasks={tasks} />
+                {Object.entries(columns).map(([colId, colTasks]) => (
+                    <Column key={colId} id={colId} tasks={colTasks} />
                 ))}
             </div>
 

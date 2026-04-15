@@ -5,35 +5,43 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { useAllTask, useCreateTask } from '@/hooks/task.hooks'
-import { useEffect } from 'react'
+import { useCreateTask } from '@/hooks/task.hooks'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useParams } from 'react-router-dom'
 
-const TaskProgresstab = () => {
-    const { id } = useParams();
-    const { data: tasks, isSuccess: tasksSucess, isError: tasksIsError, error: tasksError } = useAllTask(id)
+const TaskProgresstab = ({ tasks, projectId }) => {
+    const [pendingTask, setPendingTask] = useState([]);
+    const [completedTask, setCompletedTask] = useState([]);
+    const taskStatusCount = (tasks) => {
+        let completed = tasks?.filter((task) => {
+            return task.status === "done"
+        })
+        let pending = tasks?.filter((task) => {
+            return task.status != "done"
+        })
+        setPendingTask(pending)
+        setCompletedTask(completed)
+    }
     useEffect(() => {
-        if (tasksSucess) console.log(tasks);
-        if (tasksIsError) console.log(tasksError?.response?.data?.message);
-    }, [tasks, tasksSucess, tasksIsError, tasksError])
+        taskStatusCount(tasks)
+    }, [tasks])
     return (
         <Card className={"rounded-md h-40  aspect-video bg-white/20 shadow-lg "}>
             <CardContent className={'flex justify-between items-center h-full px-10'}>
                 <div className={'w-70 h-full  bg-white/70 backdrop-blur-lg border border-white/40  rounded-sm flex flex-col items-center justify-center  '}>
-                    <h3 className='text-xl font-semibold'>12</h3>
+                    <h3 className='text-xl font-semibold'>{tasks?.length}</h3>
                     <p>Total Task</p>
                 </div>
                 <div className={'w-70 h-full bg-white/70 backdrop-blur-lg border border-white/40 rounded-sm flex flex-col items-center justify-center'}>
-                    <h3 className='text-xl font-semibold'>5</h3>
+                    <h3 className='text-xl font-semibold'>{completedTask?.length}</h3>
                     <p>Completed</p>
                 </div>
                 <div className={'w-70 h-full bg-white/70 backdrop-blur-lg border border-white/40 rounded-sm flex flex-col items-center justify-center'}>
-                    <h3 className='text-xl font-semibold'>7</h3>
+                    <h3 className='text-xl font-semibold'>{pendingTask?.length}</h3>
                     <p>Pending</p>
                 </div>
                 <div className={'w-50 rounded-sm flex items-center justify-center'}>
-                    <AddTaskDialog projectId={id} />
+                    <AddTaskDialog projectId={projectId} />
                 </div>
 
             </CardContent>

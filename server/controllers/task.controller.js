@@ -6,7 +6,7 @@ export const createTask = async (req, res) => {
   try {
     const { title, description, status, priority, dueDate, projectId } =
       req.body;
-    const createdBy = req.body.id;
+    const createdBy = req.user.id;
     if (!title || !description || !priority || !dueDate || !projectId) {
       return res.status(400).json({ message: "All Fields Are Required" });
     }
@@ -30,7 +30,7 @@ export const createTask = async (req, res) => {
       return res.status(400).json({ message: "Invalid priority" });
     }
 
-    const validStatus = ["Todo", "In Progress", "Done"];
+    const validStatus = ["todo", "inprogress", "done"];
     if (status && !validStatus.includes(status)) {
       return res.status(400).json({ message: "Invalid status" });
     }
@@ -68,8 +68,8 @@ export const allTask = async (req, res) => {
         ...(priority ? [{ priority }] : []),
       ];
     }
-    console.log(filter);
-    const tasks = await Task.find(filter);
+    const tasks = await Task.find(filter).populate("assignedTo", "name email");
+
     return res.status(202).json({ tasks });
   } catch (error) {
     console.log(error);
