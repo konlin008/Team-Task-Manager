@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { DndContext, closestCorners, DragOverlay } from "@dnd-kit/core";
 import Column from "./Column";
 import TaskCard from "./TaskCard";
+import { useEditTask } from "@/hooks/task.hooks";
 
 const STATUS_MAP = {
     "todo": "todo",
@@ -33,8 +34,8 @@ function normalizeTask(t) {
 
     return {
         ...t,
-        id: t._id,          
-        status: statusKey, 
+        id: t._id,
+        status: statusKey,
         priority: (t.priority ?? "low").toLowerCase(),
         assignee,
         date,
@@ -42,6 +43,7 @@ function normalizeTask(t) {
 }
 
 export default function KanbanBoard({ tasks, projectId }) {
+    const { mutate: editTask } = useEditTask()
     const [columns, setColumns] = useState({
         todo: [],
         inProgress: [],
@@ -85,11 +87,20 @@ export default function KanbanBoard({ tasks, projectId }) {
 
         const movedTask = columns[sourceCol].find((i) => i.id === active.id);
 
+        // 🟢 1. Optimistic UI update
         setColumns((prev) => ({
             ...prev,
             [sourceCol]: prev[sourceCol].filter((i) => i.id !== active.id),
             [destCol]: [...prev[destCol], { ...movedTask, status: destCol }],
         }));
+
+        // 🟢 2. Backend update using mutation
+        editTask({
+            taskId: movedTask.id,
+            payload: {
+                status: destCol, // make sure backend expects this format
+            },
+        });
     }
 
     return (

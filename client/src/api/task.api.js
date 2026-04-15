@@ -12,8 +12,8 @@ export const assignMemberApi = async (taskId, memberId) => {
   const res = await api.put(`/task/${taskId}/assign-member/${memberId}`);
   return res.data;
 };
-export const editTaskApi = async ({ payload, id }) => {
-  const res = await api.put(`/task/${id}`, payload);
+export const editTaskApi = async ({ payload, taskId }) => {
+  const res = await api.put(`/task/${taskId}`, payload);
   return res.data;
 };
 export const deleteTaskApi = async (id) => {

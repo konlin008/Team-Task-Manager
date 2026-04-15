@@ -81,11 +81,13 @@ export const allTask = async (req, res) => {
 export const editTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const userId = req.body.id;
+    const userId = req.user.id;
+    console.log(userId);
     const { title, description, status, priority, dueDate } = req.body;
+    console.log(status);
     if (!id) return res.status(400).json({ message: "Bad Request" });
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ message: "Invalid project ID" });
+      return res.status(400).json({ message: "Invalid Task ID" });
     }
     const task = await Task.findById(id);
     if (!task) return res.status(404).json({ message: "Task Not Found" });
@@ -102,7 +104,7 @@ export const editTask = async (req, res) => {
       return res.status(400).json({ message: "Invalid priority" });
     }
 
-    const validStatus = ["Todo", "In Progress", "Done"];
+    const validStatus = ["todo", "inProgress", "done"];
     if (status && !validStatus.includes(status)) {
       return res.status(400).json({ message: "Invalid status" });
     }

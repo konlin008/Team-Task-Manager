@@ -29,7 +29,19 @@ export const useAssignMember = () => {
     mutationFn: editTaskApi,
   });
 };
-export const use = () => {
+export const useEditTask = () => {
+  return useMutation({
+    mutationFn: editTaskApi,
+    onSuccess: (response) => {
+      toast.success(response?.message);
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message);
+    },
+  });
+};
+
+export const useDeleteTask = () => {
   return useMutation({
     mutationFn: deleteTaskApi,
   });
