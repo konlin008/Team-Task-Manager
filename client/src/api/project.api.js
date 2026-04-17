@@ -8,6 +8,10 @@ export const getProjectsApi = async (workspaceId) => {
   const res = await api.get(`/project/workspace/${workspaceId}`);
   return res.data;
 };
+export const projectDetailsApi = async (projectId) => {
+  const res = await api.get(`/project/${projectId}`);
+  return res.data;
+};
 export const deleteProjectApi = async (projectId) => {
   const res = await api.delete(`/project/${projectId}`);
   return res.data;

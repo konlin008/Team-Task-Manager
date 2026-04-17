@@ -3,6 +3,7 @@
   background: #ffffff;
   border-radius: 16px;
   border: 1px solid #ede9fe;
+  min-height: 100px;
 
   display: flex;
   flex-direction: column;
@@ -66,13 +67,6 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-}
-
-.task-assignee {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  min-width: 0;
 }
 
 .task-avatar {

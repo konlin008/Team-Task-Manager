@@ -2,6 +2,7 @@ import {
   createProjectApi,
   deleteProjectApi,
   getProjectsApi,
+  projectDetailsApi,
 } from "@/api/project.api.js";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -24,6 +25,13 @@ export const useGetProjects = (workspaceId) => {
     queryKey: ["projects", workspaceId],
     queryFn: () => getProjectsApi(workspaceId),
     enabled: !!workspaceId,
+  });
+};
+export const useProjectDetails = (projectId) => {
+  return useQuery({
+    queryKey: ["project", projectId],
+    queryFn: () => projectDetailsApi(projectId),
+    enabled: !!projectId,
   });
 };
 export const useDeleteProject = () => {
