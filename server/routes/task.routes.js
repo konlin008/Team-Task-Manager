@@ -5,6 +5,7 @@ import {
   createTask,
   deleteTask,
   editTask,
+  taskDetails,
 } from "../controllers/task.controller.js";
 import isAuthenticated from "../middleware/isAuthenticated.js";
 
@@ -15,6 +16,7 @@ router.use(isAuthenticated);
 router.post("/", createTask);
 router.get("/:projectId", allTask);
 router.put("/:id/assign-member/:memberId", assignMember);
+router.get("/:id", taskDetails);
 router.put("/:id", editTask);
 router.delete("/:id", deleteTask);
 

@@ -12,6 +12,10 @@ export const assignMemberApi = async (taskId, memberId) => {
   const res = await api.put(`/task/${taskId}/assign-member/${memberId}`);
   return res.data;
 };
+export const taskDetailsApi = async (taskId) => {
+  const res = await api.get(`/task/${taskId}`);
+  return res.data;
+};
 export const editTaskApi = async ({ payload, taskId }) => {
   const res = await api.put(`/task/${taskId}`, payload);
   return res.data;

@@ -78,13 +78,28 @@ export const allTask = async (req, res) => {
     });
   }
 };
+export const taskDetails = async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    const userId = req.user.id;
+    if (!mongoose.Types.ObjectId.isValid(taskId)) {
+      return res.status(400).json({ message: "Invalid Task ID" });
+    }
+    const task = await Task.findById(taskId);
+    if (!task) return res.status(404).json({ message: "Task Not Found" });
+    return res.status(200).json({ task });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+};
 export const editTask = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user.id;
-    console.log(userId);
     const { title, description, status, priority, dueDate } = req.body;
-    console.log(status);
     if (!id) return res.status(400).json({ message: "Bad Request" });
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid Task ID" });
