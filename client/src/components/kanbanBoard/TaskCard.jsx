@@ -1,7 +1,8 @@
 import { useDraggable } from "@dnd-kit/core";
 import "./TaskCard.css";
-import { ClockAlert, MessageSquare, Users, GripVertical } from "lucide-react";
+import { ClockAlert, MessageSquare, GripVertical } from "lucide-react";
 import EditTask from "./EditTask";
+import AllAssignee from "./AllAssignee";
 
 const PRIORITY_CONFIG = {
     high: { label: "High", className: "priority-high" },
@@ -74,11 +75,7 @@ export default function TaskCard({ task, isOverlay = false }) {
             </div>
 
             <div className="w-full h-10 flex items-center justify-between">
-                <div className="flex items-center cursor-pointer gap-1">
-                    <Users size={20} />
-                    <p className="text-sm">All Assignee</p>
-                </div>
-
+                <AllAssignee assignees={task.assignee} />
                 <div className="flex items-center cursor-pointer gap-1">
                     <MessageSquare size={20} />
                     <p className="text-sm">Chat</p>

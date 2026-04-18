@@ -1,6 +1,6 @@
 .task-card {
   padding: 14px 14px 12px;
-  background: #ffffff;
+  background: #ffffffd2;
   border-radius: 16px;
   border: 1px solid #ede9fe;
   min-height: 100px;
@@ -73,7 +73,7 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  border: 2px solid #ffffff;
+  border: 2px solid #ffffffe1;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
   display: flex;
   align-items: center;

@@ -20,10 +20,8 @@ function normalizeTask(t) {
         STATUS_MAP[(t.status ?? "").toLowerCase()] ??
         "todo";
 
-    const assignee =
-        Array.isArray(t.assignedTo) && t.assignedTo.length > 0
-            ? t.assignedTo[0]?.name ?? ""
-            : "";
+    const assignee = t.assignedTo
+
 
     const date = t.dueDate
         ? new Date(t.dueDate).toLocaleDateString("en-US", {
@@ -42,7 +40,7 @@ function normalizeTask(t) {
     };
 }
 
-export default function KanbanBoard({ tasks, projectId }) {
+export default function KanbanBoard({ tasks }) {
     const { mutate: editTask } = useEditTask()
     const [columns, setColumns] = useState({
         todo: [],
@@ -87,18 +85,16 @@ export default function KanbanBoard({ tasks, projectId }) {
 
         const movedTask = columns[sourceCol].find((i) => i.id === active.id);
 
-        // 🟢 1. Optimistic UI update
         setColumns((prev) => ({
             ...prev,
             [sourceCol]: prev[sourceCol].filter((i) => i.id !== active.id),
             [destCol]: [...prev[destCol], { ...movedTask, status: destCol }],
         }));
 
-        // 🟢 2. Backend update using mutation
         editTask({
             taskId: movedTask.id,
             payload: {
-                status: destCol, // make sure backend expects this format
+                status: destCol,
             },
         });
     }
