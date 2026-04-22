@@ -1,9 +1,11 @@
 import {
   allTaskApi,
+  assignMemberApi,
   createTaskApi,
   deleteTaskApi,
   editTaskApi,
   taskDetailsApi,
+  unassignedMembersApi,
 } from "@/api/task.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -26,8 +28,16 @@ export const useAllTask = (projectId) => {
   });
 };
 export const useAssignMember = () => {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: editTaskApi,
+    mutationFn: assignMemberApi,
+    onSuccess: (response) => {
+      queryClient.invalidateQueries(["unAssigned-members tasks"]);
+      toast.success(response?.message);
+    },
+    onError: (error) => {
+      toast.error(error?.response?.data?.message);
+    },
   });
 };
 export const useTaskDetails = (taskId) => {
@@ -54,5 +64,12 @@ export const useEditTask = () => {
 export const useDeleteTask = () => {
   return useMutation({
     mutationFn: deleteTaskApi,
+  });
+};
+export const useUnassignedMembers = (taskId) => {
+  return useQuery({
+    queryKey: ["unAssigned-members", taskId],
+    queryFn: () => unassignedMembersApi(taskId),
+    enabled: !!taskId,
   });
 };

@@ -166,7 +166,7 @@ export const deleteTask = async (req, res) => {
 export const assignMember = async (req, res) => {
   try {
     const { memberId, id } = req.params;
-    const adminId = req.body.id;
+    const adminId = req.user.id;
     if (!id || !memberId)
       return res.status(400).json({ message: "Bad Request" });
     if (
@@ -212,5 +212,34 @@ export const assignMember = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+export const unassignedMembers = async (req, res) => {
+  try {
+    const taskId = req.params.id;
+    if (!taskId) return res.status(400).json({ message: "Task Id Rquired" });
+    const task = await Task.findById(taskId).select("assignedTo project");
+    if (!task) {
+      return res.status(404).json({ message: "Task not found" });
+    }
+    const project = await Project.findById(task.project)
+      .select("members.user")
+      .populate({ path: "members.user", select: "avatar name email" });
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+    const assignedSet = new Set(task.assignedTo.map((id) => id.toString()));
+    const unassignedMembers = project.members.filter((member) => {
+      return !assignedSet.has(member.user._id.toString());
+    });
+    return res.status(200).json({
+      success: true,
+      unassignedMembers,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server Error",
+    });
   }
 };

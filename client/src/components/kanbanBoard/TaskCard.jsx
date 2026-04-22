@@ -75,7 +75,7 @@ export default function TaskCard({ task, isOverlay = false }) {
             </div>
 
             <div className="w-full h-10 flex items-center justify-between">
-                <AllAssignee assignees={task.assignee} />
+                <AllAssignee assignees={task.assignee} taskId={task.id} />
                 <div className="flex items-center cursor-pointer gap-1">
                     <MessageSquare size={20} />
                     <p className="text-sm">Chat</p>

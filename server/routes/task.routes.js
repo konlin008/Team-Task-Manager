@@ -6,6 +6,7 @@ import {
   deleteTask,
   editTask,
   taskDetails,
+  unassignedMembers,
 } from "../controllers/task.controller.js";
 import isAuthenticated from "../middleware/isAuthenticated.js";
 
@@ -19,5 +20,6 @@ router.put("/:id/assign-member/:memberId", assignMember);
 router.get("/:id", taskDetails);
 router.put("/:id", editTask);
 router.delete("/:id", deleteTask);
+router.get("/:id/unassigned-members", unassignedMembers);
 
 export default router;
