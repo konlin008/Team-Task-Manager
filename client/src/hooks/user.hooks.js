@@ -1,4 +1,8 @@
-import { requestToJoinWorkspaceApi, serachWorkSpaceApi } from "@/api/user.api";
+import {
+  assignedTasksApi,
+  requestToJoinWorkspaceApi,
+  serachWorkSpaceApi,
+} from "@/api/user.api";
 import { useQuery } from "@tanstack/react-query";
 
 export const useSearchInviteCode = (inviteCode) => {
@@ -14,6 +18,13 @@ export const useRequestToJoinWorkspace = (workspaceId) => {
     queryKey: ["joinWorkspace", workspaceId],
     queryFn: () => requestToJoinWorkspaceApi(workspaceId),
     enabled: false,
+    retry: false,
+  });
+};
+export const useAssignedTasks = () => {
+  return useQuery({
+    queryKey: ["assigned-task"],
+    queryFn: assignedTasksApi,
     retry: false,
   });
 };

@@ -1,4 +1,5 @@
 import JoinRequest from "../models/JoinRequest.js";
+import Task from "../models/Task.js";
 import WorkSpace from "../models/WorkSpace.js";
 
 export const searchWorkspace = async (req, res) => {
@@ -64,5 +65,24 @@ export const joinWorkspaceRequest = async (req, res) => {
     return res.status(500).json({
       message: "Internal server Error",
     });
+  }
+};
+export const assignedTask = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const tasks = await Task.find({
+      assignedTo: userId,
+    })
+      .populate("assignedTo", "name email")
+      .populate("project", "title")
+      .populate("createdBy", "name");
+    if (tasks.length === 0)
+      return res
+        .status(404)
+        .json({ message: "You are Not Assigned To Any Task" });
+    return res.status(200).json({ tasks });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };

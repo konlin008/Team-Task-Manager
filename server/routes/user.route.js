@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  assignedTask,
   joinWorkspaceRequest,
   searchWorkspace,
 } from "../controllers/user.controller.js";
@@ -13,5 +14,6 @@ router.get(
   isAuthenticated,
   joinWorkspaceRequest,
 );
+router.get("/assigned-task", isAuthenticated, assignedTask);
 
 export default router;

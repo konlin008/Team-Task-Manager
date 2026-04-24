@@ -5,6 +5,7 @@ import LoginPage from './pages/auth/LoginPage'
 import RegisterPage from './pages/auth/RegisterPage'
 import Dashboard from './pages/dashboard/Dashboard'
 import ProjectDetails from './pages/project/ProjectDetails'
+import MyTaskPage from './pages/MyTaskPage'
 
 function App() {
   const appRouter = createBrowserRouter([
@@ -13,7 +14,8 @@ function App() {
       element: <MainLayout />,
       children: [
         { path: '', element: <Dashboard /> },
-        { path: '/project-details/:id', element: <ProjectDetails /> }
+        { path: '/project-details/:id', element: <ProjectDetails /> },
+        { path: '/my-task', element: <MyTaskPage /> }
       ]
 
     },
