@@ -21,55 +21,56 @@ const MyTaskPage = () => {
     const doneTasksSize =
         data?.tasks?.filter(task => task.status === 'done').length || 0;
     return (
-        <div className='w-full min-h-[calc(100vh-80px)] bg-[#F3F2FB] px-20 py-10 bg-[url(/bg.png)] bg-cover flex flex-col gap-10'>
+        <div className='w-full h-full flex flex-col gap-10'>
             <h1 className='font-semibold text-2xl'>My Task</h1>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <Card>
-                    <CardContent className="flex items-center gap-3">
-                        <div className='bg-violet-300 rounded-sm py-2 px-2'>
-                            <ClipboardList color='#8826d9' />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                <Card className="hover:shadow-md transition">
+                    <CardContent className="flex items-center gap-4 p-5">
+                        <div className="bg-violet-100 p-3 rounded-lg">
+                            <ClipboardList className="text-violet-600" size={22} />
                         </div>
-                        <div className='mt-5'>
+                        <div>
                             <p className="text-2xl font-bold">{data?.tasks?.length}</p>
                             <p className="text-sm text-muted-foreground">Total Assigned</p>
                         </div>
                     </CardContent>
                 </Card>
-                <Card>
-                    <CardContent className="flex items-center gap-3">
-                        <div className='bg-yellow-300 rounded-sm py-2 px-2'>
-                            <List color="#e0991f" />
+                <Card className="hover:shadow-md transition">
+                    <CardContent className="flex items-center gap-4 p-5">
+                        <div className="bg-yellow-100 p-3 rounded-lg">
+                            <List className="text-yellow-600" size={22} />
                         </div>
-                        <div className='mt-5'>
+                        <div>
                             <p className="text-2xl font-bold">{todoTasksSize}</p>
                             <p className="text-sm text-muted-foreground">To Do</p>
                         </div>
                     </CardContent>
                 </Card>
-                <Card>
-                    <CardContent className="flex items-center gap-3">
-                        <div className='bg-blue-400 rounded-sm py-2 px-2'>
-                            <TrendingUp color="#284af0" />
+                <Card className="hover:shadow-md transition">
+                    <CardContent className="flex items-center gap-4 p-5">
+                        <div className="bg-blue-100 p-3 rounded-lg">
+                            <TrendingUp className="text-blue-600" size={22} />
                         </div>
-                        <div className='mt-5'>
+                        <div>
                             <p className="text-2xl font-bold">{inProgressTasksSize}</p>
                             <p className="text-sm text-muted-foreground">In Progress</p>
                         </div>
                     </CardContent>
                 </Card>
-                <Card>
-                    <CardContent className="flex items-center gap-3">
-                        <div className='bg-green-400 rounded-sm py-2 px-2'>
-                            <CheckLine color="#0f8a11" />
+                <Card className="hover:shadow-md transition">
+                    <CardContent className="flex items-center gap-4 p-5">
+                        <div className="bg-green-100 p-3 rounded-lg">
+                            <CheckLine className="text-green-600" size={22} />
                         </div>
-                        <div className='mt-5'>
+                        <div>
                             <p className="text-2xl font-bold">{doneTasksSize}</p>
                             <p className="text-sm text-muted-foreground">Done</p>
                         </div>
                     </CardContent>
                 </Card>
-            </div>
 
+            </div>
             <Table >
                 <TableCaption>A list of your recent invoices.</TableCaption>
                 <TableHeader >
@@ -107,8 +108,7 @@ const MyTaskPage = () => {
                                             :
                                             task?.status === 'inProgress' ? <Badge className="  text-violet-700 bg-violet-400" >• In Progress</Badge>
                                                 :
-                                                <Badge
-                                                    className="  bg-yellow-200 text-yellow-700">• Todo</Badge>
+                                                <Badge className=" bg-yellow-200 text-yellow-700">• Todo</Badge>
                                     }
                                 </TableCell>
                             </TableRow>

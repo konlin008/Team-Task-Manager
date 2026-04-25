@@ -13,7 +13,7 @@ const Dashboard = () => {
 
 
     return (
-        <div className='w-full min-h-[calc(100vh-80px)] bg-[#F3F2FB] px-20 py-10 bg-[url(/bg.png)] bg-cover flex flex-col gap-10 '>
+        <div className='w-full h-full flex flex-col gap-10'>
             <div>
                 <h1 className='text-3xl font-semibold'>Hello Aman</h1>
                 <p>Organize, track, and conquer your team’s work — all in one place.</p>

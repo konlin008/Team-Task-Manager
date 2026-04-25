@@ -15,7 +15,7 @@ function App() {
       children: [
         { path: '', element: <Dashboard /> },
         { path: '/project-details/:id', element: <ProjectDetails /> },
-        { path: '/my-task', element: <MyTaskPage /> }
+        { path: '/tasks', element: <MyTaskPage /> }
       ]
 
     },
