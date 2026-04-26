@@ -1,4 +1,6 @@
 import express from "express";
+import { createServer } from "node:http";
+import { Server } from "socket.io";
 import connectDb from "./config/db.js";
 const PORT = 8080;
 import "dotenv/config";
@@ -16,6 +18,9 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server);
+
 connectDb();
 
 app.use(
@@ -48,6 +53,9 @@ app.use("/api/task", taskRouter);
 app.use("/api/comment", commentRouter);
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
+});
+io.on("connection", (socket) => {
+  console.log("a user connected", socket.id);
 });
 app.listen(PORT, () => {
   console.log(chalk.bgBlue(`Server listening on port ${PORT}`));

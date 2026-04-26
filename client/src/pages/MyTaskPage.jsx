@@ -72,7 +72,7 @@ const MyTaskPage = () => {
 
             </div>
             <Table >
-                <TableCaption>A list of your recent invoices.</TableCaption>
+                <TableCaption>A list of your tasks.</TableCaption>
                 <TableHeader >
                     <TableRow className={'font-semibold'}>
                         <TableHead className="w:100px font-semibold">Task</TableHead>

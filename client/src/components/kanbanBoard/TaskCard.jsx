@@ -3,6 +3,7 @@ import "./TaskCard.css";
 import { ClockAlert, MessageSquare, GripVertical } from "lucide-react";
 import EditTask from "./EditTask";
 import AllAssignee from "./AllAssignee";
+import { GroupChatDialog } from "../shared/GroupChatDialog";
 
 const PRIORITY_CONFIG = {
     high: { label: "High", className: "priority-high" },
@@ -77,8 +78,7 @@ export default function TaskCard({ task, isOverlay = false }) {
             <div className="w-full h-10 flex items-center justify-between">
                 <AllAssignee assignees={task.assignee} taskId={task.id} />
                 <div className="flex items-center cursor-pointer gap-1">
-                    <MessageSquare size={20} />
-                    <p className="text-sm">Chat</p>
+                    <GroupChatDialog />
                 </div>
             </div>
         </div>
