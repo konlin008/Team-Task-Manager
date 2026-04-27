@@ -6,8 +6,10 @@ import RegisterPage from './pages/auth/RegisterPage'
 import Dashboard from './pages/dashboard/Dashboard'
 import ProjectDetails from './pages/project/ProjectDetails'
 import MyTaskPage from './pages/MyTaskPage'
+import { useSocket } from './hooks/useSocket'
 
 function App() {
+  useSocket();
   const appRouter = createBrowserRouter([
     {
       path: '/',

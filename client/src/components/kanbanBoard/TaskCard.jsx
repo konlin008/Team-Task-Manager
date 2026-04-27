@@ -78,7 +78,7 @@ export default function TaskCard({ task, isOverlay = false }) {
             <div className="w-full h-10 flex items-center justify-between">
                 <AllAssignee assignees={task.assignee} taskId={task.id} />
                 <div className="flex items-center cursor-pointer gap-1">
-                    <GroupChatDialog />
+                    <GroupChatDialog taskId={task.id} />
                 </div>
             </div>
         </div>

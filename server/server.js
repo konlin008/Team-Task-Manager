@@ -2,24 +2,33 @@ import express from "express";
 import { createServer } from "node:http";
 import { Server } from "socket.io";
 import connectDb from "./config/db.js";
-const PORT = 8080;
 import "dotenv/config";
 import chalk from "chalk";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import passport from "passport";
+import "./config/passport.js";
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.routes.js";
 import workSpaceRouter from "./routes/workSpace.route.js";
 import projectRouter from "./routes/project.routes.js";
 import taskRouter from "./routes/task.routes.js";
 import commentRouter from "./routes/comment.routes.js";
-import passport from "passport";
-import session from "express-session";
-import "./config/passport.js";
-import cookieParser from "cookie-parser";
-import cors from "cors";
+import messageRouter from "./routes/message.routes.js";
+import initSocket from "./socket/index.js";
 
 const app = express();
+const PORT = process.env.PORT || 8080;
+
 const server = createServer(app);
-const io = new Server(server);
+
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    credentials: true,
+  },
+});
 
 connectDb();
 
@@ -51,12 +60,15 @@ app.use("/api/workspace", workSpaceRouter);
 app.use("/api/project", projectRouter);
 app.use("/api/task", taskRouter);
 app.use("/api/comment", commentRouter);
+
+app.use("/api/messages", messageRouter);
+
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
-io.on("connection", (socket) => {
-  console.log("a user connected", socket.id);
-});
-app.listen(PORT, () => {
-  console.log(chalk.bgBlue(`Server listening on port ${PORT}`));
+
+initSocket(io);
+
+server.listen(PORT, () => {
+  console.log(chalk.bgBlue(`Server running on port ${PORT}`));
 });
