@@ -14,8 +14,7 @@ import authRouter from "./routes/auth.routes.js";
 import workSpaceRouter from "./routes/workSpace.route.js";
 import projectRouter from "./routes/project.routes.js";
 import taskRouter from "./routes/task.routes.js";
-import commentRouter from "./routes/comment.routes.js";
-import messageRouter from "./routes/message.routes.js";
+import messageRouter from "./routes/messages.routes.js";
 import initSocket from "./socket/index.js";
 
 const app = express();
@@ -59,8 +58,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/workspace", workSpaceRouter);
 app.use("/api/project", projectRouter);
 app.use("/api/task", taskRouter);
-app.use("/api/comment", commentRouter);
-
+app.use("/api/comment", messageRouter);
 app.use("/api/messages", messageRouter);
 
 app.use((req, res) => {

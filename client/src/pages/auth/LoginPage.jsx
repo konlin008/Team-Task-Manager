@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 const LoginPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { mutate, data, isSuccess, isLoading, error } = useLogin()
+  const { mutate, data, isSuccess, error } = useLogin()
 
   const login = (e) => {
     e.preventDefault()

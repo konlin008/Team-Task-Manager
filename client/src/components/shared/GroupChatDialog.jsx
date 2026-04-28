@@ -10,28 +10,22 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { MessageSquare } from "lucide-react";
 import socket from "@/lib/socket";
+import { usePreviousMessages } from "@/hooks/messages.hooks";
 
 export function GroupChatDialog({ taskId }) {
     const currentUser = "Aman";
-
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
 
-    useEffect(() => {
-        const fetchMessages = async () => {
-            try {
-                const res = await fetch(
-                    `http://localhost:8080/api/task/${taskId}/messages`
-                );
-                const data = await res.json();
-                setMessages(data);
-            } catch (err) {
-                console.error(err);
-            }
-        };
+    const { data, isSuccess, isError, error } = usePreviousMessages(taskId)
 
-        if (taskId) fetchMessages();
-    }, [taskId]);
+    useEffect(() => {
+        if (isSuccess) {
+            const msgs = Array.isArray(data) ? data : data?.messages || [];
+            setMessages(msgs);
+        }
+    }, [isSuccess, data, isError, error]);
+
     useEffect(() => {
         if (!taskId) return;
 
@@ -92,8 +86,8 @@ export function GroupChatDialog({ taskId }) {
 
                                 <div
                                     className={`px-3 py-2 rounded-lg max-w-[70%] text-sm ${isMine
-                                            ? "bg-blue-500 text-white"
-                                            : "bg-muted text-foreground"
+                                        ? "bg-blue-500 text-white"
+                                        : "bg-muted text-foreground"
                                         }`}
                                 >
                                     {msg.text}

@@ -6,7 +6,7 @@ export const getTaskMessages = async (req, res) => {
 
     const messages = await TaskMessage.find({ taskId }).sort({ createdAt: 1 });
 
-    res.json(messages);
+    res.status(200).json(messages);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch messages" });
   }

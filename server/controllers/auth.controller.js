@@ -37,7 +37,7 @@ export const login = async (req, res) => {
     }
     const user = await User.findOne({ email: email });
     if (!user) return res.status(404).json({ message: "User Not Found" });
-    const checkedPassword = bcrypt.compare(password, user.password);
+    const checkedPassword = await bcrypt.compare(password, user.password);
     if (!checkedPassword)
       return res.status(401).json({ message: "Email or Password Invalid" });
     const token = generateToken(user._id);
@@ -71,6 +71,15 @@ export const googleAuthCallback = async (req, res) => {
         secure: false,
         sameSite: "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000,
+      })
+      .json({
+        message: "Login successful",
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar || "",
+        },
       })
       .redirect("http://localhost:5173/");
   } catch (error) {

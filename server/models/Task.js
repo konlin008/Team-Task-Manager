@@ -13,7 +13,7 @@ const taskSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ["todo", "inProgress", "done"],
-      default: "Todo",
+      default: "todo",
     },
     priority: {
       type: String,
@@ -42,7 +42,8 @@ const taskSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
 taskSchema.index({ project: 1 });
 taskSchema.index({ assignedTo: 1 });
-const Task = mongoose.model("Task", taskSchema);
-export default Task;
+
+export default mongoose.models.Task || mongoose.model("Task", taskSchema);
