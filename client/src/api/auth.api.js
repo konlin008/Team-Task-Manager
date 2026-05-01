@@ -8,3 +8,7 @@ export const registerApi = async (payload) => {
   const res = await api.post("/auth/register", payload);
   return res.data;
 };
+export const getMeApi = async () => {
+  const res = await api.get("/auth/me");
+  return res.data;
+};

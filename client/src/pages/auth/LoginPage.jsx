@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { useLogin } from '@/hooks/auth.hook.js';
+import { useGetMe, useLogin } from '@/hooks/auth.hook.js';
 import React, { useEffect, useState } from 'react'
 import { FcGoogle } from "react-icons/fc";
 import { toast } from 'react-toastify';
@@ -11,6 +11,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const { mutate, data, isSuccess, error } = useLogin()
+
 
   const login = (e) => {
     e.preventDefault()
@@ -23,6 +24,7 @@ const LoginPage = () => {
   const handleGoogleLogin = () => {
     window.location.href = "http://localhost:8080/api/auth/google"
   }
+
   return (
     <div className='w-screen h-screen flex'>
       <div className='w-[35%] h-full px-20 py-20 bg-[#F4F5FC] flex flex-col gap-10'>

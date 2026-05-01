@@ -72,17 +72,18 @@ export const googleAuthCallback = async (req, res) => {
         sameSite: "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       })
-      .json({
-        message: "Login successful",
-        user: {
-          _id: user._id,
-          name: user.name,
-          email: user.email,
-          avatar: user.avatar || "",
-        },
-      })
-      .redirect("http://localhost:5173/");
+      .redirect("http://localhost:5173/?auth=success");
   } catch (error) {
     return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+export const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+
+    res.json({ user });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
