@@ -6,5 +6,8 @@ export const useSocket = () => {
     if (!socket.connected) {
       socket.connect();
     }
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 };

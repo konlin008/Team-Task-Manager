@@ -1,6 +1,6 @@
 import { useDraggable } from "@dnd-kit/core";
 import "./TaskCard.css";
-import { ClockAlert, MessageSquare, GripVertical } from "lucide-react";
+import { ClockAlert, GripVertical } from "lucide-react";
 import EditTask from "./EditTask";
 import AllAssignee from "./AllAssignee";
 import { GroupChatDialog } from "../shared/GroupChatDialog";

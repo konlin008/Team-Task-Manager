@@ -5,12 +5,10 @@ import { toast } from 'react-toastify'
 import WorkspaceProjectsCard from '@/components/shared/WorkspaceProjectsCard'
 import WorkspaceMembersCard from '@/components/shared/WorkspaceMembersCard'
 import useAuthStore from '@/store/useAuthStore'
-import { Button } from '@/components/ui/button'
 import { useGetMe } from '@/hooks/auth.hook'
 
 const Dashboard = () => {
     const { data: allWorkspace, isError: allWorkspaceIsError, error: allWorkspaceError } = useAllWorkspace()
-    const logout = useAuthStore((state) => state.logout);
     const { refetch } = useGetMe();
     const user = useAuthStore((state) => state.user);
 
@@ -21,7 +19,7 @@ const Dashboard = () => {
             refetch();
         }
     }, []);
-    
+
     useEffect(() => {
         if (allWorkspaceIsError) toast.error(allWorkspaceError?.response?.data?.message);
     }, [allWorkspaceIsError, allWorkspaceError])
@@ -45,7 +43,6 @@ const Dashboard = () => {
                 </> :
                 <NewUserDashboard />
             }
-            <Button onClick={() => logout()}>Logout</Button>
         </div>
     )
 }

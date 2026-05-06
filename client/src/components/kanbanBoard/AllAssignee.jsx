@@ -9,13 +9,12 @@ import { toast } from 'react-toastify'
 import { Button } from '../ui/button'
 
 const AllAssignee = ({ assignees, taskId }) => {
-    const { data: unassignedMembersData, isSuccess: unassignedMembersIsSuccess, isError: unassignedMembersIsError, error: unassignedMembersError } = useUnassignedMembers(taskId)
+    const { data: unassignedMembersData, isError: unassignedMembersIsError, error: unassignedMembersError } = useUnassignedMembers(taskId)
     const { mutate: assignMember } = useAssignMember()
     useEffect(() => {
 
         if (unassignedMembersIsError) toast.error(unassignedMembersError?.response?.data?.message);
     }, [unassignedMembersIsError, unassignedMembersError])
-    console.log(unassignedMembersData);
     return (
         <Dialog>
             <DialogTrigger asChild>

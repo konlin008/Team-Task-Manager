@@ -1,11 +1,14 @@
 import jwt from "jsonwebtoken";
 import TaskMessage from "../models/taskMessage.js";
 import Task from "../models/task.js";
+import cookie from "cookie";
 
 export default function initSocket(io) {
   io.use((socket, next) => {
     try {
-      const token = socket.handshake.auth?.token;
+      const cookies = cookie.parse(socket.handshake.headers.cookie || "");
+
+      const token = cookies.token;
 
       if (!token) {
         return next(new Error("Unauthorized"));
@@ -13,23 +16,25 @@ export default function initSocket(io) {
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      socket.user = { id: decoded.id };
+      socket.user = {
+        id: decoded.id,
+      };
 
       next();
     } catch (err) {
+      console.log("SOCKET AUTH ERROR:", err.message);
+
       next(new Error("Unauthorized"));
     }
   });
 
   io.on("connection", (socket) => {
-    console.log("User connected:", socket.id);
     socket.on("join_task", async (taskId) => {
       try {
         const userId = socket.user.id;
 
         const task = await Task.findOne({
           _id: taskId,
-          assignedTo: userId,
         });
 
         if (!task) {
@@ -37,9 +42,19 @@ export default function initSocket(io) {
         }
 
         socket.join(taskId);
+
+        socket.emit("joined_task", {
+          success: true,
+          taskId,
+        });
       } catch (err) {
         console.error(err);
       }
+    });
+    socket.on("leave_task", (taskId) => {
+      socket.leave(taskId);
+
+      console.log("LEFT ROOM:", taskId);
     });
     socket.on("send_message", async (data) => {
       try {
@@ -50,6 +65,7 @@ export default function initSocket(io) {
           sender: socket.user.id,
           text,
         });
+
         const populatedMessage = await savedMessage.populate(
           "sender",
           "name email",
@@ -57,7 +73,7 @@ export default function initSocket(io) {
 
         io.to(taskId).emit("receive_message", populatedMessage);
       } catch (err) {
-        console.error("Socket error:", err);
+        console.error(err);
       }
     });
 

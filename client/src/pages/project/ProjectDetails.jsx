@@ -11,15 +11,9 @@ const ProjectDetails = () => {
     const { data: ProjectDetails, isSuccess: projectIsSuccess, isError: projectDetailsIsError, error: projectDetailsError } = useProjectDetails(id)
     const { data: tasks, isSuccess: tasksSucess, isError: tasksIsError, error: tasksError } = useAllTask(id)
     useEffect(() => {
-        if (projectIsSuccess) {
-            console.log(ProjectDetails);
-        }
         if (projectDetailsIsError) console.log(projectDetailsError?.response?.data?.message);
     }, [ProjectDetails, projectIsSuccess, projectDetailsIsError, projectDetailsError,])
     useEffect(() => {
-        if (tasksSucess) {
-            console.log(tasks);
-        }
         if (tasksIsError) console.log(tasksError?.response?.data?.message);
     }, [tasks, tasksSucess, tasksIsError, tasksError,])
     return (
