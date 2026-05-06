@@ -14,7 +14,6 @@ const WorkspaceMembersCard = ({ workspaceId }) => {
     useEffect(() => {
         if (error) toast.error(error.response.data.message);
     }, [error])
-    console.log(data);
     return (
         <Card className={'bg-white/60 backdrop-blur-md border border-white/30 rounded-2xl shadow-lg'}>
             <CardHeader>
