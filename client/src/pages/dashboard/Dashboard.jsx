@@ -4,13 +4,12 @@ import { useEffect } from 'react'
 import { toast } from 'react-toastify'
 import WorkspaceProjectsCard from '@/components/shared/WorkspaceProjectsCard'
 import WorkspaceMembersCard from '@/components/shared/WorkspaceMembersCard'
-import useAuthStore from '@/store/useAuthStore'
 import { useGetMe } from '@/hooks/auth.hook'
 
 const Dashboard = () => {
     const { data: allWorkspace, isError: allWorkspaceIsError, error: allWorkspaceError } = useAllWorkspace()
     const { refetch } = useGetMe();
-    const user = useAuthStore((state) => state.user);
+    
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);

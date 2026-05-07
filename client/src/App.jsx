@@ -7,6 +7,7 @@ import Dashboard from './pages/dashboard/Dashboard'
 import ProjectDetails from './pages/project/ProjectDetails'
 import MyTaskPage from './pages/MyTaskPage'
 import { useSocket } from './hooks/useSocket'
+import MyProfile from './pages/MyProfile'
 
 function App() {
   useSocket();
@@ -17,7 +18,8 @@ function App() {
       children: [
         { path: '', element: <Dashboard /> },
         { path: '/project-details/:id', element: <ProjectDetails /> },
-        { path: '/tasks', element: <MyTaskPage /> }
+        { path: '/tasks', element: <MyTaskPage /> },
+        { path: '/my-profile', element: <MyProfile /> }
       ]
 
     },
