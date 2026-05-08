@@ -1,12 +1,20 @@
 import { IoNotificationsOutline } from "react-icons/io5"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Link, useNavigate } from "react-router-dom"
-import {DropdownMenu, DropdownMenuGroup, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuContent} from "../ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuGroup, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuContent } from "../ui/dropdown-menu"
 import useAuthStore from "@/store/useAuthStore"
+import { useLogout } from "@/hooks/auth.hook"
 
 const Navbar = () => {
   const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+  const { mutate } = useLogout()
   const nav = useNavigate()
+  const handleLogout = () => {
+    logout()
+    mutate()
+    nav("/login")
+  }
   return (
     <div className="w-full h-full bg-white/80 backdrop-blur-md border-b flex items-center justify-between">
 
@@ -31,31 +39,26 @@ const Navbar = () => {
           <div className="bg-[#F3F2FB] p-2 rounded-full hover:bg-purple-100 transition">
             <IoNotificationsOutline size={20} />
           </div>
-
           <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar className="cursor-pointer">
-              <AvatarImage src={user.avatar} />
-              <AvatarFallback>{user.name[0]}</AvatarFallback>
+              <AvatarImage src={user?.avatar} />
+              <AvatarFallback>{user?.name[0]}</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuGroup>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuItem onClick={() => nav('/my-profile')}>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>Team</DropdownMenuItem>
-              <DropdownMenuItem>Subscription</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-
-
       </div>
     </div>
   )

@@ -5,17 +5,21 @@ import { toast } from 'react-toastify'
 import WorkspaceProjectsCard from '@/components/shared/WorkspaceProjectsCard'
 import WorkspaceMembersCard from '@/components/shared/WorkspaceMembersCard'
 import { useGetMe } from '@/hooks/auth.hook'
+import useAuthStore from '@/store/useAuthStore'
 
 const Dashboard = () => {
     const { data: allWorkspace, isError: allWorkspaceIsError, error: allWorkspaceError } = useAllWorkspace()
     const { refetch } = useGetMe();
-    
-
+    const setUser = useAuthStore((state) => state.setUser);
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
 
         if (params.get("auth") === "success") {
-            refetch();
+            refetch().then((res) => {
+                if (res.data?.user) {
+                    setUser(res.data.user);
+                }
+            });
         }
     }, []);
 

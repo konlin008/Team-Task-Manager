@@ -12,3 +12,7 @@ export const assignedTasksApi = async () => {
   const res = await api.get(`user/assigned-task`);
   return res.data;
 };
+export const updateProfileApi = async (data) => {
+  const res = await api.put("user/update-profile", data);
+  return res.data;
+};

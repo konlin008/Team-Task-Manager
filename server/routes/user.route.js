@@ -5,6 +5,7 @@ import {
   searchWorkspace,
 } from "../controllers/user.controller.js";
 import isAuthenticated from "../middleware/isAuthenticated.js";
+import { updateProfile } from "../controllers/auth.controller.js";
 
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router.get(
   joinWorkspaceRequest,
 );
 router.get("/assigned-task", isAuthenticated, assignedTask);
+router.put("/update-profile", isAuthenticated, updateProfile);
 
 export default router;

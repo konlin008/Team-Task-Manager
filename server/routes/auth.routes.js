@@ -4,6 +4,7 @@ import {
   getMe,
   googleAuthCallback,
   login,
+  logout,
   register,
 } from "../controllers/auth.controller.js";
 import isAuthenticated from "../middleware/isAuthenticated.js";
@@ -23,4 +24,5 @@ router.get(
   googleAuthCallback,
 );
 router.get("/me", isAuthenticated, getMe);
+router.post("/logout", logout);
 export default router;

@@ -87,3 +87,53 @@ export const getMe = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+export const logout = async (req, res) => {
+  try {
+    return res
+      .clearCookie("token", {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+      })
+      .status(200)
+      .json({
+        message: "Logout successful",
+      });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+};
+export const updateProfile = async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    if (!name) {
+      return res.status(400).json({
+        message: "Name is required",
+      });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      {
+        name,
+      },
+      {
+        new: true,
+      },
+    ).select("-password");
+
+    return res.status(200).json({
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      message: "Internal Server Error",
+    });
+  }
+};

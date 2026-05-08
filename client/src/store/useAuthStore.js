@@ -6,7 +6,7 @@ const useAuthStore = create(
     (set) => ({
       user: null,
 
-      setUser: (userData ) =>
+      setUser: (userData) =>
         set({
           user: userData,
         }),
@@ -14,7 +14,7 @@ const useAuthStore = create(
       logout: () =>
         set({
           user: null,
-        }), 
+        }),
     }),
     {
       name: "auth-storage",
