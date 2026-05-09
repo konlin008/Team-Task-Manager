@@ -2,6 +2,7 @@ import express from "express";
 import {
   createProject,
   deleteProject,
+  fetchUserProjects,
   getProjects,
   projectDetails,
 } from "../controllers/project.controller.js";
@@ -15,5 +16,6 @@ router.post("/", createProject);
 router.get("/workspace/:id", getProjects);
 router.get("/:id", projectDetails);
 router.delete("/:id", deleteProject);
+router.get("/user", fetchUserProjects);
 
 export default router;

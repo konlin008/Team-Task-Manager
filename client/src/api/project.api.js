@@ -16,3 +16,10 @@ export const deleteProjectApi = async (projectId) => {
   const res = await api.delete(`/project/${projectId}`);
   return res.data;
 };
+export const fetchUserProjectsApi = async (type) => {
+  const url = type ? `/project/user?type=${type}` : `/project/user`;
+
+  const res = await api.get(url);
+
+  return res.data;
+};

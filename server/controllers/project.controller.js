@@ -71,3 +71,30 @@ export const deleteProject = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+export const fetchUserProjects = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { type } = req.query;
+    let filter = {};
+    if (!type) {
+      filter = {
+        $or: [{ owner: userId }, { members: userId }],
+      };
+    }
+    if (type === "owner") {
+      filter = { owner: userId };
+    }
+    if (type === "assigned") {
+      filter = { members: userId };
+    }
+    const project = Project.find(filter);
+    return res.status(200).json({
+      success: true,
+      count: projects.length,
+      projects,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "internal Server Error" });
+  }
+};

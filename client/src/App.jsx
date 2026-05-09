@@ -8,6 +8,7 @@ import ProjectDetails from './pages/project/ProjectDetails'
 import MyTaskPage from './pages/MyTaskPage'
 import { useSocket } from './hooks/useSocket'
 import MyProfile from './pages/MyProfile'
+import Projects from './pages/project/Projects'
 
 function App() {
   useSocket();
@@ -19,7 +20,8 @@ function App() {
         { path: '', element: <Dashboard /> },
         { path: '/project-details/:id', element: <ProjectDetails /> },
         { path: '/tasks', element: <MyTaskPage /> },
-        { path: '/my-profile', element: <MyProfile /> }
+        { path: '/my-profile', element: <MyProfile /> },
+        { path: '/projects', element: <Projects /> }
       ]
 
     },

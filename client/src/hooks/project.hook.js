@@ -1,6 +1,7 @@
 import {
   createProjectApi,
   deleteProjectApi,
+  fetchUserProjectsApi,
   getProjectsApi,
   projectDetailsApi,
 } from "@/api/project.api.js";
@@ -45,5 +46,12 @@ export const useDeleteProject = () => {
     onError: (error) => {
       toast.error(error?.response?.data?.message);
     },
+  });
+};
+export const useFetchUserProjects = (type) => {
+  return useQuery({
+    queryFn: () => fetchUserProjectsApi(type),
+    queryKey: ["user-projects"],
+    retry: false,
   });
 };
