@@ -51,7 +51,7 @@ export const useDeleteProject = () => {
 export const useFetchUserProjects = (type) => {
   return useQuery({
     queryFn: () => fetchUserProjectsApi(type),
-    queryKey: ["user-projects"],
+    queryKey: ["user-projects", type],
     retry: false,
   });
 };

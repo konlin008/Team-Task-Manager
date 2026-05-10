@@ -12,7 +12,7 @@ import React, { useState } from 'react'
 
 const MyProfile = () => {
   const user = useAuthStore((state) => state.user);
-  const { mutate, isPending } = useUpdateProfile();
+  const { mutate } = useUpdateProfile();
   const [name, setName] = useState('')
 
 

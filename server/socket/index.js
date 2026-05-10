@@ -78,7 +78,6 @@ export default function initSocket(io) {
     });
 
     socket.on("disconnect", () => {
-      console.log("User disconnected:", socket.id);
     });
   });
 }

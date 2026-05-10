@@ -78,19 +78,19 @@ export const fetchUserProjects = async (req, res) => {
     let filter = {};
     if (!type) {
       filter = {
-        $or: [{ owner: userId }, { members: userId }],
+        $or: [{ owner: userId }, { "members.user": userId }],
       };
     }
     if (type === "owner") {
       filter = { owner: userId };
     }
     if (type === "assigned") {
-      filter = { members: userId };
+      filter = { "members.user": userId };
     }
-    const project = Project.find(filter);
+    const projects = await Project.find(filter)
+      .populate("owner", "name ")
+      .populate("members.user", "name");
     return res.status(200).json({
-      success: true,
-      count: projects.length,
       projects,
     });
   } catch (error) {

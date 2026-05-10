@@ -14,8 +14,8 @@ router.use(isAuthenticated);
 
 router.post("/", createProject);
 router.get("/workspace/:id", getProjects);
+router.get("/user", fetchUserProjects);
 router.get("/:id", projectDetails);
 router.delete("/:id", deleteProject);
-router.get("/user", fetchUserProjects);
 
 export default router;
