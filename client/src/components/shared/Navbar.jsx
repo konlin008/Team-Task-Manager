@@ -1,16 +1,18 @@
-import { IoNotificationsOutline } from "react-icons/io5"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Link, useNavigate } from "react-router-dom"
 import { DropdownMenu, DropdownMenuGroup, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuContent } from "../ui/dropdown-menu"
 import useAuthStore from "@/store/useAuthStore"
 import { useLogout } from "@/hooks/auth.hook"
+import useWorkspaceStore from "@/store/useWorkspaceStore"
 
 const Navbar = () => {
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
+  const clearWorkSpace = useWorkspaceStore(state => state.clearWorkspace)
   const { mutate } = useLogout()
   const nav = useNavigate()
   const handleLogout = () => {
+    clearWorkSpace()
     logout()
     mutate()
     nav("/login")
@@ -26,21 +28,11 @@ const Navbar = () => {
       </div>
       <div className="hidden md:flex items-center gap-8 text-md font-medium text-gray-600">
         <Link to="/" className="hover:text-purple-600 transition flex gap-2 items-center">Dashboard</Link>
-        <Link to="/tasks" className="hover:text-purple-600 transition">Task</Link>
         <Link to="/projects" className="hover:text-purple-600 transition">Project</Link>
-        <Link to="/members" className="hover:text-purple-600 transition">Members</Link>
-        <Link to="/team" className="hover:text-purple-600 transition">Team</Link>
-        <Link to="/settings" className="hover:text-purple-600 transition">Setting</Link>
+        <Link to="/tasks" className="hover:text-purple-600 transition">Task</Link>
       </div>
 
-      <div className="flex items-center gap-4">
-
-        <div className="relative cursor-pointer">
-          <div className="bg-[#F3F2FB] p-2 rounded-full hover:bg-purple-100 transition">
-            <IoNotificationsOutline size={20} />
-          </div>
-          <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-        </div>
+      <div>
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar className="cursor-pointer">

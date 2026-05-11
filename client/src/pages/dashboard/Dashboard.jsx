@@ -6,11 +6,13 @@ import WorkspaceProjectsCard from '@/components/shared/WorkspaceProjectsCard'
 import WorkspaceMembersCard from '@/components/shared/WorkspaceMembersCard'
 import { useGetMe } from '@/hooks/auth.hook'
 import useAuthStore from '@/store/useAuthStore'
+import useWorkspaceStore from '@/store/useWorkspaceStore'
 
 const Dashboard = () => {
-    const { data: allWorkspace, isError: allWorkspaceIsError, error: allWorkspaceError } = useAllWorkspace()
+    const { data: allWorkspace, isSuccess: allWorkspaceIsSuccess, isError: allWorkspaceIsError, error: allWorkspaceError } = useAllWorkspace()
     const { refetch } = useGetMe();
     const setUser = useAuthStore((state) => state.setUser);
+    const setWorkspace = useWorkspaceStore((state) => state.setWorkspace)
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
 
@@ -22,10 +24,12 @@ const Dashboard = () => {
             });
         }
     }, []);
-
     useEffect(() => {
+        if (allWorkspaceIsSuccess) {
+            setWorkspace(allWorkspace?.workspace)
+        }
         if (allWorkspaceIsError) toast.error(allWorkspaceError?.response?.data?.message);
-    }, [allWorkspaceIsError, allWorkspaceError])
+    }, [allWorkspaceIsError, allWorkspaceError, allWorkspaceIsSuccess, allWorkspace])
 
     return (
         <div className='w-full h-full flex flex-col gap-10'>

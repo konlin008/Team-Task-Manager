@@ -1,5 +1,5 @@
+import AddProjectCard from "@/components/shared/AddProjectCard";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
     Table,
     TableBody,
@@ -9,16 +9,20 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { useFetchUserProjects } from "@/hooks/project.hook";
+import { useDeleteProject, useFetchUserProjects } from "@/hooks/project.hook";
 import useAuthStore from "@/store/useAuthStore";
-import { CircleOff, Plus, SquarePen, Trash2 } from "lucide-react";
+import useWorkspaceStore from "@/store/useWorkspaceStore";
+import { CircleOff, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Projects = () => {
     const [sort, setSort] = useState("");
     const { data } = useFetchUserProjects(sort);
     const user = useAuthStore((state) => state.user);
-    console.log(data);
+    const workspace = useWorkspaceStore(state => state.workspace)
+    const { mutate: deleteProject } = useDeleteProject();
+    const nav = useNavigate()
 
     const sortingcategories = [
         {
@@ -44,10 +48,9 @@ const Projects = () => {
                 </p>
             </div>
             <div className="flex justify-end">
-                <Button className={"p-5 rounded-sm bg-violet-600"}>
-                    <Plus />
-                    New Project
-                </Button>
+                <div className="w-40">
+                    <AddProjectCard workspace={workspace} />
+                </div>
             </div>
             <div className="hidden md:flex items-center gap-8 text-md  text-gray-600 w-fit">
                 {sortingcategories.map((sortingcategory) => {
@@ -85,7 +88,7 @@ const Projects = () => {
                         data?.projects
                             ?.map((project) => {
                                 return (
-                                    <TableRow key={project._id}>
+                                    <TableRow key={project._id} onClick={() => nav(`/project-details/${project?._id}`)}>
                                         <TableCell className="font-medium">{project.title}</TableCell>
                                         <TableCell>
                                             {
@@ -99,10 +102,10 @@ const Projects = () => {
                                         </TableCell>
                                         <TableCell className={'flex justify-end gap-1'}>
                                             {
-                                                user._id === project.owner._id ? <>
-                                                    <SquarePen size={20} />
-                                                    <Trash2 size={20} />
-                                                </> : <CircleOff size={20} />
+                                                user._id === project.owner._id ?
+                                                    <Trash2 onClick={() => deleteProject(project?._id)
+                                                    } size={20} />
+                                                    : <CircleOff size={20} />
                                             }
                                         </TableCell>
                                     </TableRow>
