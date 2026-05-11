@@ -4,6 +4,7 @@ import { DropdownMenu, DropdownMenuGroup, DropdownMenuTrigger, DropdownMenuItem,
 import useAuthStore from "@/store/useAuthStore"
 import { useLogout } from "@/hooks/auth.hook"
 import useWorkspaceStore from "@/store/useWorkspaceStore"
+import { useState } from "react"
 
 const Navbar = () => {
   const user = useAuthStore((state) => state.user);
@@ -11,6 +12,23 @@ const Navbar = () => {
   const clearWorkSpace = useWorkspaceStore(state => state.clearWorkspace)
   const { mutate } = useLogout()
   const nav = useNavigate()
+
+  const navLinks = [
+    {
+      label: 'Dashboard',
+      path: '/'
+    },
+    {
+      label: "Project",
+      path: "/projects",
+    },
+    {
+      label: "Task",
+      path: "/tasks",
+    },
+  ]
+  const [navState, setNavState] = useState('/')
+
   const handleLogout = () => {
     clearWorkSpace()
     logout()
@@ -27,9 +45,17 @@ const Navbar = () => {
         </h1>
       </div>
       <div className="hidden md:flex items-center gap-8 text-md font-medium text-gray-600">
-        <Link to="/" className="hover:text-purple-600 transition flex gap-2 items-center">Dashboard</Link>
-        <Link to="/projects" className="hover:text-purple-600 transition">Project</Link>
-        <Link to="/tasks" className="hover:text-purple-600 transition">Task</Link>
+        {navLinks.map((link) => (
+          <Link
+            key={link.path}
+            to={link.path}
+            className={`hover:text-purple-600 transition flex gap-2 items-center  border-gray-400 hover:border-purple-600 cursor-pointer ${navState === link.path ? " border-b text-purple-600 border-purple-600"
+              : "border-gray-400 hover:text-purple-600 hover:border-purple-600"} `}
+            onClick={() => setNavState(link.path)}
+          >
+            {link.label}
+          </Link>
+        ))}
       </div>
 
       <div>
@@ -52,7 +78,7 @@ const Navbar = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-    </div>
+    </div >
   )
 }
 
