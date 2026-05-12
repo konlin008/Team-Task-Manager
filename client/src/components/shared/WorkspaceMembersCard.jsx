@@ -31,12 +31,12 @@ const WorkspaceMembersCard = ({ workspaceId }) => {
             <CardContent className={'flex flex-col gap-5'}>
                 <div className='flex flex-col gap-2'>
                     {
-                        data?.members?.map((member) => {
+                        data?.members?.slice(0, 5).map((member) => {
                             return (
-                                <div className="flex items-center justify-between p-4 rounded-xl bg-white/70 backdrop-blur-md shadow-sm border" key={member?._id}>
+                                <div className="flex items-center justify-between p-2 rounded-xl bg-white/70 backdrop-blur-md shadow-sm border" key={member?._id}>
 
                                     <div className="flex items-center gap-3">
-                                        <Avatar className="h-10 w-10">
+                                        <Avatar className="h-5 w-5">
                                             <AvatarImage src={member?.Avatar} />
                                             <AvatarFallback>{member?.name.slice(0, 1)}</AvatarFallback>
                                         </Avatar>
@@ -49,7 +49,7 @@ const WorkspaceMembersCard = ({ workspaceId }) => {
                                     </div>
 
                                     <Button variant="outline" size="sm" className="text-red-500 border-red-200 hover:bg-red-50 flex items-center gap-2">
-                                        <Trash2 className="h-4 w-4" />
+                                        <Trash2 className="h-2 w-2" />
                                         Delete
                                     </Button>
                                 </div>

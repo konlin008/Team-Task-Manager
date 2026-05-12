@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react'
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { ChevronRight, Pencil, Plus, Trash2 } from 'lucide-react'
-import { Progress } from '@/components/ui/progress'
+import { ChevronRight, Trash2 } from 'lucide-react'
 import { useDeleteProject, useGetProjects } from '@/hooks/project.hook'
-
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import AddProjectCard from './AddProjectCard'
@@ -21,7 +19,6 @@ const WorkspaceProjectsCard = ({ allWorkspace }) => {
     }, [isProjectsError])
 
     const { mutate: deleteProject } = useDeleteProject();
-    const progress = 80
     return (
         <Card className={'bg-white/60 backdrop-blur-md border border-white/30 rounded-2xl shadow-lg'}>
             <CardHeader>
@@ -40,24 +37,16 @@ const WorkspaceProjectsCard = ({ allWorkspace }) => {
             <CardContent className={'flex flex-col gap-5'}>
                 <div className='flex flex-col gap-2'>
                     {
-                        projectsData?.projects?.map((project) => {
+                        projectsData?.projects?.slice(0, 4).map((project) => {
                             return (
-                                <div className="flex items-center justify-between p-4 rounded-xl bg-white/70 backdrop-blur-md shadow-sm border" key={project?._id}  >
-
+                                <div className="flex items-center justify-between p-2 rounded-xl bg-white/70 backdrop-blur-md shadow-sm border" key={project?._id}  >
                                     <div className="flex-1" onClick={() => nav(`/project-details/${project?._id}`)}>
                                         <h3 className="text-sm font-medium text-gray-800 mb-2">
                                             {project?.title}
                                         </h3>
-                                        <p className='text-sm font-medium text-gray-500 mb-2'>
+                                        <p className='text-sm w-80 font-medium text-gray-500 mb-2 truncate'>
                                             {project?.description}
                                         </p>
-
-                                        <div className="flex items-center gap-3">
-                                            <Progress value={progress} className="h-2 flex-1" />
-                                            <span className="text-xs text-gray-500 font-medium">
-                                                {progress}%
-                                            </span>
-                                        </div>
                                     </div>
 
                                     <div className="flex items-center gap-2 ml-4">

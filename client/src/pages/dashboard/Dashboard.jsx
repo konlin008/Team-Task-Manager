@@ -7,6 +7,7 @@ import WorkspaceMembersCard from '@/components/shared/WorkspaceMembersCard'
 import { useGetMe } from '@/hooks/auth.hook'
 import useAuthStore from '@/store/useAuthStore'
 import useWorkspaceStore from '@/store/useWorkspaceStore'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 const Dashboard = () => {
     const { data: allWorkspace, isSuccess: allWorkspaceIsSuccess, isError: allWorkspaceIsError, error: allWorkspaceError } = useAllWorkspace()
@@ -33,17 +34,19 @@ const Dashboard = () => {
 
     return (
         <div className='w-full h-full flex flex-col gap-10'>
-            <div>
-                <h1 className='text-3xl font-semibold'>Hello Aman</h1>
-                <p>Organize, track, and conquer your team’s work — all in one place.</p>
-            </div>
+            <Card className={'rounded-md h-40  aspect-video bg-white/20 shadow-lg '}>
+                <CardHeader className={'flex flex-col gap-5 mt-5'}>
+                    <CardTitle className={'text-2xl'}>Hello Aman</CardTitle>
+                    <CardDescription >Organize, track, and conquer your team’s work — all in one place.</CardDescription>
+                </CardHeader>
+            </Card>
             {allWorkspace?.workspace ?
                 <>
                     <div className='flex gap-5'>
-                        <div className='w-[60%]'>
+                        <div className='w-[30%] h-full'>
                             <WorkspaceProjectsCard allWorkspace={allWorkspace} />
                         </div>
-                        <div className='w-[40%]'>
+                        <div className='w-[20%]'>
                             <WorkspaceMembersCard workspaceId={allWorkspace?.workspace?._id} />
                         </div>
                     </div>
