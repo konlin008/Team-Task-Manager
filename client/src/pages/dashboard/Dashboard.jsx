@@ -8,6 +8,7 @@ import { useGetMe } from '@/hooks/auth.hook'
 import useAuthStore from '@/store/useAuthStore'
 import useWorkspaceStore from '@/store/useWorkspaceStore'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import WorkspaceProjectsCardSkeleton from '@/components/shared/WorkspaceProjectsCardSkeleton '
 
 const Dashboard = () => {
     const { data: allWorkspace, isSuccess: allWorkspaceIsSuccess, isError: allWorkspaceIsError, error: allWorkspaceError } = useAllWorkspace()
@@ -31,6 +32,7 @@ const Dashboard = () => {
         }
         if (allWorkspaceIsError) toast.error(allWorkspaceError?.response?.data?.message);
     }, [allWorkspaceIsError, allWorkspaceError, allWorkspaceIsSuccess, allWorkspace])
+    const isLoading = true
 
     return (
         <div className='w-full h-full flex flex-col gap-10'>
@@ -44,11 +46,12 @@ const Dashboard = () => {
                 <>
                     <div className='flex gap-5'>
                         <div className='w-[30%] h-full'>
-                            <WorkspaceProjectsCard allWorkspace={allWorkspace} />
+                            {isLoading ? <WorkspaceProjectsCardSkeleton /> : <WorkspaceProjectsCard allWorkspace={allWorkspace} />}
                         </div>
                         <div className='w-[20%]'>
                             <WorkspaceMembersCard workspaceId={allWorkspace?.workspace?._id} />
                         </div>
+
                     </div>
                 </> :
                 <NewUserDashboard />
