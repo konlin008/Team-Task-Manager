@@ -27,9 +27,12 @@ const WorkspaceProjectsCard = ({ allWorkspace }) => {
                 <CardAction >
                     <Button
                         variant="outline"
-                        className=" rounded-full px-4 py-2 text-sm font-medium text-violet-600 border-violet-200  bg-white/60 backdrop-blur-md hover:bg-violet-50 flex items-center gap-1">
+                        className=" rounded-full px-4 py-2 text-sm font-medium text-violet-600 border-violet-200  bg-white/20 shadow-lg backdrop-blur-md hover:bg-violet-50 flex items-center gap-1"
+                        onClick={() => nav('/projects')}
+                    >
                         View All
                         <ChevronRight className="h-4 w-4" />
+
                     </Button>
                 </CardAction>
             </CardHeader>
