@@ -3,6 +3,7 @@ import {
   requestToJoinWorkspaceApi,
   serachWorkSpaceApi,
 } from "@/api/user.api";
+import useAuthStore from "@/store/useAuthStore";
 import { useQuery } from "@tanstack/react-query";
 
 export const useSearchInviteCode = (inviteCode) => {
@@ -22,9 +23,11 @@ export const useRequestToJoinWorkspace = (workspaceId) => {
   });
 };
 export const useAssignedTasks = () => {
+  const user = useAuthStore((state) => state.user);
   return useQuery({
     queryKey: ["assigned-task"],
     queryFn: assignedTasksApi,
+    enabled: !!user,
     retry: false,
   });
 };

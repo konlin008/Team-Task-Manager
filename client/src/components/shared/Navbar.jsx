@@ -5,6 +5,7 @@ import useAuthStore from "@/store/useAuthStore"
 import { useLogout } from "@/hooks/auth.hook"
 import useWorkspaceStore from "@/store/useWorkspaceStore"
 import { useState } from "react"
+import { Button } from "../ui/button"
 
 const Navbar = () => {
   const user = useAuthStore((state) => state.user);
@@ -58,26 +59,35 @@ const Navbar = () => {
         ))}
       </div>
 
-      <div>
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Avatar className="cursor-pointer">
-              <AvatarImage src={user?.avatar} />
-              <AvatarFallback>{user?.name[0]}</AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuGroup>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => nav('/my-profile')}>Profile</DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      {
+        user ? <div>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Avatar className="cursor-pointer">
+                <AvatarImage src={user?.avatar} />
+                <AvatarFallback>{user?.name[0]}</AvatarFallback>
+              </Avatar>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuItem onClick={() => nav('/my-profile')}>Profile</DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div> : <div>
+          <Button
+            className="bg-linear-to-r from-violet-500 to-purple-500 text-white px-6 py-5 rounded-md shadow-md hover:opacity-90 transition"
+            onClick={() => { nav('/login') }}
+          >
+            Login
+          </Button>
+        </div>
+      }
     </div >
   )
 }

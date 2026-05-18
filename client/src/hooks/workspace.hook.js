@@ -6,12 +6,15 @@ import {
   getAllWorkspaceApi,
   reviewRequestApi,
 } from "@/api/workspace.api.js";
+import useAuthStore from "@/store/useAuthStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const useAllWorkspace = () => {
+  const user = useAuthStore((state) => state.user);
   return useQuery({
     queryFn: getAllWorkspaceApi,
     queryKey: ["allWorkspace"],
+    enabled: !!user,
   });
 };
 export const useCreateWorksapce = () => {

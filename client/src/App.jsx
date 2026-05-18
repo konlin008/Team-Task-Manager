@@ -9,30 +9,34 @@ import MyTaskPage from './pages/MyTaskPage'
 import { useSocket } from './hooks/useSocket'
 import MyProfile from './pages/MyProfile'
 import Projects from './pages/project/Projects'
+import ProtectedRoute from './components/shared/ProtectedRoute'
+
 
 function App() {
   useSocket();
+
   const appRouter = createBrowserRouter([
     {
-      path: '/',
-      element: <MainLayout />,
+      element: <ProtectedRoute />,
       children: [
-        { path: '', element: <Dashboard /> },
-        { path: '/project-details/:id', element: <ProjectDetails /> },
-        { path: '/tasks', element: <MyTaskPage /> },
-        { path: '/my-profile', element: <MyProfile /> },
-        { path: '/projects', element: <Projects /> }
+        {
+          path: '/',
+          element: <MainLayout />,
+          children: [
+            { path: '', element: <Dashboard /> },
+            { path: '/project-details/:id', element: <ProjectDetails /> },
+            { path: '/tasks', element: <MyTaskPage /> },
+            { path: '/my-profile', element: <MyProfile /> },
+            { path: '/projects', element: <Projects /> }
+          ]
+        }
       ]
-
     },
     { path: '/login', element: <LoginPage /> },
     { path: '/register', element: <RegisterPage /> }
   ])
-  return (
-    <>
-      <RouterProvider router={appRouter} />
-    </>
-  )
+
+  return <RouterProvider router={appRouter} />
 }
 
 export default App

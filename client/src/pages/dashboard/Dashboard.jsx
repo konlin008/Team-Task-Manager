@@ -19,6 +19,8 @@ const Dashboard = () => {
     const { data: allWorkspace, isLoading, isSuccess: allWorkspaceIsSuccess, isError: allWorkspaceIsError, error: allWorkspaceError } = useAllWorkspace()
     const { refetch } = useGetMe();
     const setUser = useAuthStore((state) => state.setUser);
+    const user = useAuthStore((state) => state.user)
+    console.log(user);
     const setWorkspace = useWorkspaceStore((state) => state.setWorkspace)
     const nav = useNavigate()
     useEffect(() => {
@@ -40,7 +42,6 @@ const Dashboard = () => {
     }, [allWorkspaceIsError, allWorkspaceError, allWorkspaceIsSuccess, allWorkspace])
 
     const { data, isSuccess, isError, error } = useAssignedTasks()
-    console.log(data);
 
     useEffect(() => {
         if (isError) toast.error(error?.response?.data?.message);
@@ -56,14 +57,15 @@ const Dashboard = () => {
 
     return (
         <div className='w-full h-full flex flex-col gap-10'>
-            <Card className={'rounded-md h-40  aspect-video bg-white/20 shadow-lg '}>
-                <CardHeader className={'flex flex-col gap-5 mt-5'}>
-                    <CardTitle className={'text-2xl'}>Hello Aman</CardTitle>
-                    <CardDescription >Organize, track, and conquer your team’s work — all in one place.</CardDescription>
-                </CardHeader>
-            </Card>
+
             {allWorkspace?.workspace ?
                 <>
+                    <Card className={'rounded-md h-40  aspect-video bg-white/20 shadow-lg '}>
+                        <CardHeader className={'flex flex-col gap-5 mt-5'}>
+                            <CardTitle className={'text-2xl'}>Hello {user?.name}</CardTitle>
+                            <CardDescription >Organize, track, and conquer your team’s work — all in one place.</CardDescription>
+                        </CardHeader>
+                    </Card>
                     <div className='flex gap-5 items-start'>
 
                         <div className='w-[30%]'>

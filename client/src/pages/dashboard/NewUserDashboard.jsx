@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button'
-import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Field, FieldGroup } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
@@ -7,25 +6,33 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useRequestToJoinWorkspace, useSearchInviteCode } from '@/hooks/user.hooks'
 import { useCreateWorksapce } from '@/hooks/workspace.hook'
+import useAuthStore from '@/store/useAuthStore'
 import { LogIn, Plus } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 const NewUserDashboard = () => {
+    const user = useAuthStore((state) => state.user)
+    const nav = useNavigate()
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
     const [inviteCode, setInviteCode] = useState('')
-
 
     const { mutate, isError, isSuccess, data, error } = useCreateWorksapce()
     const { data: workSpaceDetails, refetch, isFetching, isSuccess: workSpaceDetailsSuccess, error: workSpaceDetailsError } = useSearchInviteCode(inviteCode)
     const { data: requestData, refetch: refetchRequest, isFetching: requestIsFetching, isSuccess: requestIsSuccess, error: requestError } = useRequestToJoinWorkspace(workSpaceDetails?.workspace?._id)
 
     const createWorkspace = () => {
+        if (!user) nav('/login')
         if (title.length === 0) return toast.error("Title Required")
         mutate({ title, description });
         setTitle("")
         setDescription("")
+    }
+    const handelSearch = () => {
+        if (!user) nav('/login')
+        refetch()
     }
     useEffect(() => {
         if (isError) {
@@ -109,7 +116,7 @@ const NewUserDashboard = () => {
                                 <FieldGroup>
                                     <Field orientation="horizontal">
                                         <Input type="search" placeholder="invitation code" className={'py-5'} value={inviteCode} onChange={(e) => setInviteCode(e.target.value)} />
-                                        <Button onClick={refetch} className="bg-linear-to-r from-violet-500 to-purple-500 text-white px-6 py-5 rounded-xl shadow-md hover:opacity-90 transition" >Search</Button>
+                                        <Button onClick={handelSearch} className="bg-linear-to-r from-violet-500 to-purple-500 text-white px-6 py-5 rounded-xl shadow-md hover:opacity-90 transition" >Search</Button>
                                     </Field>
                                 </FieldGroup>
                                 {
