@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import TaskMessage from "../models/taskMessage.js";
-import Task from "../models/task.js";
+import Task from "../models/Task.js";
 import cookie from "cookie";
 
 export default function initSocket(io) {
@@ -77,7 +77,6 @@ export default function initSocket(io) {
       }
     });
 
-    socket.on("disconnect", () => {
-    });
+    socket.on("disconnect", () => {});
   });
 }
