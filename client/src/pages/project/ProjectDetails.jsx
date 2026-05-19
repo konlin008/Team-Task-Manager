@@ -9,7 +9,7 @@ import { useProjectDetails } from '@/hooks/project.hook';
 const ProjectDetails = () => {
     const { id } = useParams();
     const { data: ProjectDetails, isSuccess: projectIsSuccess, isError: projectDetailsIsError, error: projectDetailsError } = useProjectDetails(id)
-    const { data: tasks, isSuccess: tasksSucess, isError: tasksIsError, error: tasksError } = useAllTask(id)
+    const { data: tasks, isLoading: taskIsLoading, isSuccess: tasksSucess, isError: tasksIsError, error: tasksError } = useAllTask(id)
     useEffect(() => {
         if (projectDetailsIsError) console.log(projectDetailsError?.response?.data?.message);
     }, [ProjectDetails, projectIsSuccess, projectDetailsIsError, projectDetailsError,])
@@ -22,7 +22,7 @@ const ProjectDetails = () => {
                 <h1 className='font-semibold text-2xl'>{ProjectDetails?.project?.title}</h1>
                 <p className='text-md text-gray-600'>{ProjectDetails?.project?.description}</p>
             </div>
-            <TaskProgresstab tasks={tasks?.tasks} projectId={id} />
+            <TaskProgresstab tasks={tasks?.tasks} taskIsLoading={taskIsLoading} projectId={id} />
             <KanbanBoard tasks={tasks?.tasks} projectId={id} />
         </div>
 

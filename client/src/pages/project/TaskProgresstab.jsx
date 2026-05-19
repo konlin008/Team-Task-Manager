@@ -4,14 +4,16 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
 import { useCreateTask } from '@/hooks/task.hooks'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
-const TaskProgresstab = ({ tasks, projectId }) => {
+const TaskProgresstab = ({ tasks, taskIsLoading, projectId }) => {
     const [pendingTask, setPendingTask] = useState([]);
     const [completedTask, setCompletedTask] = useState([]);
+    const isLoading = true
     const taskStatusCount = (tasks) => {
         let completed = tasks?.filter((task) => {
             return task.status === "done"
@@ -25,13 +27,33 @@ const TaskProgresstab = ({ tasks, projectId }) => {
     useEffect(() => {
         taskStatusCount(tasks)
     }, [tasks])
-    return (
+    return taskIsLoading ? (
+        <Card className="rounded-md h-40 aspect-video bg-white/20 shadow-lg">
+            <CardContent className="flex justify-between items-center h-full px-10 gap-4">
+
+                {[1, 2, 3].map((item) => (
+                    <div
+                        key={item}
+                        className="w-70 h-full bg-white/70 backdrop-blur-lg border border-white/40 rounded-sm flex flex-col items-center justify-center gap-3"
+                    >
+                        <Skeleton className="h-8 w-16 rounded-md" />
+                        <Skeleton className="h-4 w-24 rounded-md" />
+                    </div>
+                ))}
+
+                <div className="w-50 h-full rounded-sm flex items-center justify-center">
+                    <Skeleton className="h-12 w-36 rounded-xl" />
+                </div>
+            </CardContent>
+        </Card>
+    ) : (
         <Card className={"rounded-md h-40  aspect-video bg-white/20 shadow-lg "}>
             <CardContent className={'flex justify-between items-center h-full px-10'}>
                 <div className={'w-70 h-full  bg-white/70 backdrop-blur-lg border border-white/40  rounded-sm flex flex-col items-center justify-center  '}>
-                    <h3 className='text-xl font-semibold'>{tasks?.length}</h3>
+                    <h3 className='text-xl font-semibold'>{tasks?.length
+                    }</h3>
                     <p>Total Task</p>
-                </div>
+                </div >
                 <div className={'w-70 h-full bg-white/70 backdrop-blur-lg border border-white/40 rounded-sm flex flex-col items-center justify-center'}>
                     <h3 className='text-xl font-semibold'>{completedTask?.length}</h3>
                     <p>Completed</p>
@@ -43,9 +65,8 @@ const TaskProgresstab = ({ tasks, projectId }) => {
                 <div className={'w-50 rounded-sm flex items-center justify-center'}>
                     <AddTaskDialog projectId={projectId} />
                 </div>
-
-            </CardContent>
-        </Card>
+            </CardContent >
+        </Card >
     )
 }
 

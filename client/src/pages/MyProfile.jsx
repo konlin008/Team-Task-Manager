@@ -14,6 +14,7 @@ const MyProfile = () => {
   const user = useAuthStore((state) => state.user);
   const { mutate } = useUpdateProfile();
   const [name, setName] = useState('')
+  const isuser = true
 
 
   return (
@@ -59,20 +60,38 @@ const MyProfile = () => {
           </Dialog>
 
         </div>
-        <Card className={'rounded-md h-50 py-10 px-10 w-100  aspect-video bg-white/20 shadow-lg'}>
-          <div className='flex items-center gap-3'>
-            <div >
-              <Avatar className={'w-25 h-25'} >
-                <AvatarImage src={user?.avatar} />
-                <AvatarFallback>{user?.name[0]}</AvatarFallback>
-              </Avatar>
-            </div>
-            <div>
-              <h3 className='font-semibold text-xl'>{user?.name}</h3>
-              <p className='text-gray-400'>{user?.email}</p>
-            </div>
-          </div>
-        </Card>
+        {
+          isuser ? (
+            <Card className={'rounded-md h-50 py-10 px-10 w-100  aspect-video bg-white/20 shadow-lg'}>
+              <div className='flex items-center gap-3'>
+                <div >
+                  <Avatar className={'w-25 h-25'} >
+                    <AvatarImage src={user?.avatar} />
+                    <AvatarFallback>{user?.name[0]}</AvatarFallback>
+                  </Avatar>
+                </div>
+                <div>
+                  <h3 className='font-semibold text-xl'>{user?.name}</h3>
+                  <p className='text-gray-400'>{user?.email}</p>
+                </div>
+              </div>
+            </Card>
+          ) : (
+            <Card className="rounded-md h-50 py-10 px-10 w-100 aspect-video bg-white/20 shadow-lg">
+              <div className="flex items-center gap-3">
+
+                <Skeleton className="w-25 h-25 rounded-full" />
+
+                <div className="space-y-3">
+                  <Skeleton className="h-6 w-40 rounded-md" />
+                  <Skeleton className="h-4 w-56 rounded-md" />
+                </div>
+
+              </div>
+            </Card>
+          )
+        }
+
       </div>
     </div>
   )

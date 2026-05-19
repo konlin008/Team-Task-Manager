@@ -6,69 +6,104 @@ import { useDeleteProject, useGetProjects } from '@/hooks/project.hook'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import AddProjectCard from './AddProjectCard'
+import { Skeleton } from "@/components/ui/skeleton"
 
 const WorkspaceProjectsCard = ({ allWorkspace }) => {
     const nav = useNavigate()
     const {
         data: projectsData,
         isError: isProjectsError,
+        isLoading,
         error: projectsError,
     } = useGetProjects(allWorkspace?.workspace?._id);
     useEffect(() => {
         if (isProjectsError) toast.error(projectsError?.response?.data?.message);
     }, [isProjectsError])
-
     const { mutate: deleteProject } = useDeleteProject();
-    return (
-        <Card className={'bg-white/60 backdrop-blur-md border border-white/30 rounded-2xl shadow-lg'}>
-            <CardHeader>
-                <CardTitle className={'font-semibold text-xl'}>{allWorkspace?.workspace?.title}</CardTitle>
-                <CardDescription>{allWorkspace?.workspace?.title || ''}</CardDescription>
-                <CardAction >
-                    <Button
-                        variant="outline"
-                        className=" rounded-full px-4 py-2 text-sm font-medium text-violet-600 border-violet-200  bg-white/20 shadow-lg backdrop-blur-md hover:bg-violet-50 flex items-center gap-1"
-                        onClick={() => nav('/projects')}
-                    >
-                        View All
-                        <ChevronRight className="h-4 w-4" />
+    if (!isLoading) {
+        return (
+            <Card className={'bg-white/60 backdrop-blur-md border border-white/30 rounded-2xl shadow-lg'}>
+                <CardHeader>
+                    <CardTitle className={'font-semibold text-xl'}>{allWorkspace?.workspace?.title}</CardTitle>
+                    <CardDescription>{allWorkspace?.workspace?.title || ''}</CardDescription>
+                    <CardAction >
+                        <Button
+                            variant="outline"
+                            className=" rounded-full px-4 py-2 text-sm font-medium text-violet-600 border-violet-200  bg-white/20 shadow-lg backdrop-blur-md hover:bg-violet-50 flex items-center gap-1"
+                            onClick={() => nav('/projects')}
+                        >
+                            View All
+                            <ChevronRight className="h-4 w-4" />
 
-                    </Button>
-                </CardAction>
-            </CardHeader>
+                        </Button>
+                    </CardAction>
+                </CardHeader>
 
-            <CardContent className={'flex flex-col gap-5'}>
-                <div className='flex flex-col gap-2'>
-                    {
-                        projectsData?.projects?.slice(0, 4).map((project) => {
-                            return (
-                                <div className="flex items-center justify-between p-2 rounded-xl bg-white/70 backdrop-blur-md shadow-sm border" key={project?._id}  >
-                                    <div className="flex-1" onClick={() => nav(`/project-details/${project?._id}`)}>
-                                        <h3 className="text-sm font-medium text-gray-800 mb-2">
-                                            {project?.title}
-                                        </h3>
-                                        <p className='text-sm w-80 font-medium text-gray-500 mb-2 truncate'>
-                                            {project?.description}
-                                        </p>
+                <CardContent className={'flex flex-col gap-5'}>
+                    <div className='flex flex-col gap-2'>
+                        {
+                            projectsData?.projects?.slice(0, 4).map((project) => {
+                                return (
+                                    <div className="flex items-center justify-between p-2 rounded-xl bg-white/70 backdrop-blur-md shadow-sm border" key={project?._id}  >
+                                        <div className="flex-1" onClick={() => nav(`/project-details/${project?._id}`)}>
+                                            <h3 className="text-sm font-medium text-gray-800 mb-2">
+                                                {project?.title}
+                                            </h3>
+                                            <p className='text-sm w-80 font-medium text-gray-500 mb-2 truncate'>
+                                                {project?.description}
+                                            </p>
+                                        </div>
+
+                                        <div className="flex items-center gap-2 ml-4">
+                                            <Button variant="outline" size="icon" className="text-red-500 border-red-200 hover:bg-red-50" onClick={() => deleteProject(project?._id)
+                                            }>
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+
+                                        </div>
                                     </div>
+                                )
+                            })
+                        }
+                    </div>
+                    <AddProjectCard workspace={allWorkspace?.workspace?._id} />
 
-                                    <div className="flex items-center gap-2 ml-4">
-                                        <Button variant="outline" size="icon" className="text-red-500 border-red-200 hover:bg-red-50" onClick={() => deleteProject(project?._id)
-                                        }>
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
-
-                                    </div>
+                </CardContent>
+            </Card>
+        )
+    } else {
+        return (
+            <Card className="bg-white/60 backdrop-blur-md border border-white/30 rounded-2xl shadow-lg">
+                <CardHeader>
+                    <div className="flex items-start justify-between gap-4">
+                        <div className="space-y-3">
+                            <Skeleton className="h-6 w-48 rounded-md" />
+                            <Skeleton className="h-4 w-64 rounded-md" />
+                        </div>
+                    </div>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-3">
+                        {[1, 2, 3, 4].map((item) => (
+                            <div
+                                key={item}
+                                className="flex items-center justify-between p-3 rounded-xl bg-white/70 backdrop-blur-md shadow-sm border"
+                            >
+                                <div className="flex-1 space-y-3">
+                                    <Skeleton className="h-4 w-40 rounded-md" />
+                                    <Skeleton className="h-3 w-72 rounded-md" />
                                 </div>
-                            )
-                        })
-                    }
-                </div>
-                <AddProjectCard workspace={allWorkspace?.workspace?._id} />
 
-            </CardContent>
-        </Card>
-    )
+                                <div className="ml-4">
+                                    <Skeleton className="h-10 w-10 rounded-md" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </CardContent>
+            </Card>
+        )
+    }
 }
 
 export default WorkspaceProjectsCard

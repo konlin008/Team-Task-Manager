@@ -1,5 +1,6 @@
 import AddProjectCard from "@/components/shared/AddProjectCard";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
     Table,
     TableBody,
@@ -18,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 
 const Projects = () => {
     const [sort, setSort] = useState("");
-    const { data } = useFetchUserProjects(sort);
+    const { data, isLoading } = useFetchUserProjects(sort);
     const user = useAuthStore((state) => state.user);
     const workspace = useWorkspaceStore(state => state.workspace)
     const { mutate: deleteProject } = useDeleteProject();
@@ -38,7 +39,6 @@ const Projects = () => {
             sort: "assigned",
         },
     ];
-
     return (
         <div className="w-full h-full flex flex-col gap-10">
             <div>
@@ -73,50 +73,88 @@ const Projects = () => {
                     );
                 })}
             </div>
-            <Table>
-                <TableCaption>A list of your All Projects.</TableCaption>
-                <TableHeader>
-                    <TableRow className={'text-lg'}>
-                        <TableHead className="w:100px">project</TableHead>
-                        <TableHead>Owner</TableHead>
-                        <TableHead>status</TableHead>
-                        <TableHead className="text-right">Action</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {
-                        data?.projects
-                            ?.map((project) => {
-                                return (
-                                    <TableRow key={project._id} onClick={() => nav(`/project-details/${project?._id}`)}>
-                                        <TableCell className="font-medium">{project.title}</TableCell>
-                                        <TableCell>
-                                            {
-                                                user._id === project.owner._id ? 'Me' : project.owner.name
-                                            }
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge>
-                                                {project.status}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className={'flex justify-end gap-1'}>
-                                            {
-                                                user._id === project.owner._id ?
-                                                    <Trash2 onClick={() => deleteProject(project?._id)
-                                                    } size={20} />
-                                                    : <CircleOff size={20} />
-                                            }
-                                        </TableCell>
-                                    </TableRow>
-                                )
-                            })
-                    }
+            {isLoading ? <>
+                <Table>
+                    <TableHeader>
+                        <TableRow className={'text-lg'}>
+                            <TableHead className="w:100px">project</TableHead>
+                            <TableHead>Owner</TableHead>
+                            <TableHead>status</TableHead>
+                            <TableHead className="text-right">Action</TableHead>
+                        </TableRow>
+                    </TableHeader>
 
-                </TableBody>
-            </Table>
+                    <TableBody>
+                        {[1, 2, 3, 4, 5].map((item) => (
+                            <TableRow key={item}>
+                                <TableCell>
+                                    <Skeleton className="h-5 w-40 rounded-md" />
+                                </TableCell>
+
+                                <TableCell>
+                                    <Skeleton className="h-5 w-24 rounded-md" />
+                                </TableCell>
+
+                                <TableCell>
+                                    <Skeleton className="h-7 w-20 rounded-full" />
+                                </TableCell>
+
+                                <TableCell>
+                                    <div className="flex justify-end">
+                                        <Skeleton className="h-8 w-8 rounded-md" />
+                                    </div>
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </> : <>
+                <Table>
+                    <TableCaption>A list of your All Projects.</TableCaption>
+                    <TableHeader>
+                        <TableRow className={'text-lg'}>
+                            <TableHead className="w:100px">project</TableHead>
+                            <TableHead>Owner</TableHead>
+                            <TableHead>status</TableHead>
+                            <TableHead className="text-right">Action</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {
+                            data?.projects
+                                ?.map((project) => {
+                                    return (
+                                        <TableRow key={project._id} onClick={() => nav(`/project-details/${project?._id}`)}>
+                                            <TableCell className="font-medium">{project.title}</TableCell>
+                                            <TableCell>
+                                                {
+                                                    user._id === project.owner._id ? 'Me' : project.owner.name
+                                                }
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge>
+                                                    {project.status}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell className={'flex justify-end gap-1'}>
+                                                {
+                                                    user._id === project.owner._id ?
+                                                        <Trash2 onClick={() => deleteProject(project?._id)
+                                                        } size={20} />
+                                                        : <CircleOff size={20} />
+                                                }
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                                })
+                        }
+                    </TableBody>
+                </Table>
+            </>}
+
         </div>
     );
+
 };
 
 export default Projects;
