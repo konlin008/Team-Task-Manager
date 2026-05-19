@@ -10,7 +10,7 @@ const useAuthStore = create(
         set({
           user: userData,
         }),
-
+      setIsCheckingAuth: (value) => set({ isCheckingAuth: value }),
       logout: () =>
         set({
           user: null,
