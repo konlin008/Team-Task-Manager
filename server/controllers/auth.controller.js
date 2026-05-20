@@ -72,7 +72,9 @@ export const googleAuthCallback = async (req, res) => {
         sameSite: "none",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       })
-      .redirect("http://localhost:5173/?auth=success");
+      .redirect(
+        "https://team-task-manager-zeta-seven.vercel.app/?auth=success",
+      );
   } catch (error) {
     return res.status(500).json({ message: "Internal Server Error" });
   }

@@ -21,9 +21,9 @@ const LoginPage = () => {
     if (error) toast.error(error?.response?.data?.message)
     if (isSuccess) toast.success(data?.message);
   }, [error, isSuccess])
-  const handleGoogleLogin = () => {
-    window.location.href = "https://team-task-manager-m25e.onrender.com/api/auth/google"
-  }
+  // const handleGoogleLogin = () => {
+  //   window.location.href = "https://team-task-manager-m25e.onrender.com/api/auth/google"
+  // }
 
   return (
     <div className='w-screen h-screen flex'>
