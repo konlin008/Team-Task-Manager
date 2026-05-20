@@ -22,7 +22,7 @@ const LoginPage = () => {
     if (isSuccess) toast.success(data?.message);
   }, [error, isSuccess])
   const handleGoogleLogin = () => {
-    window.location.href = "http://localhost:8080/api/auth/google"
+    window.location.href = "https://team-task-manager-m25e.onrender.com/api/auth/google"
   }
 
   return (
@@ -73,9 +73,9 @@ const LoginPage = () => {
               </Button>
             </CardContent>
             <CardFooter className="flex-col justify-center bg-white h-full gap-2">
-              <Button variant="outline" className="w-full h-10 " onClick={handleGoogleLogin}>
+              {/* <Button variant="outline" className="w-full h-10 " onClick={handleGoogleLogin}>
                 <FcGoogle className="w-10 h-10" /> Sign in with Google
-              </Button>
+              </Button> */}
               <p>don't have a account? <a href="register" className='text-blue-600'>Sign Up</a></p>
             </CardFooter>
           </Card>
