@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:8080", {
+const socket = io("https://team-task-manager-m25e.onrender.com", {
   withCredentials: true,
 });
 
